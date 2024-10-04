@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <vector>
+#include "Edge.h"
 
 
 using namespace std;
@@ -11,5 +12,11 @@ using namespace std;
 
 	int main() {
 		
+	Edge edge1(1, 8, TAXI | BUS);  // Combining TAXI and BUS using bitwise OR
+
+    // Create an edge that can be traversed by all transport types
+    Edge edge2(8, 19, TAXI);
  
+	edge1.display();
+    edge2.display();
 	}
