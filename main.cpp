@@ -5,6 +5,7 @@
 #include <iostream>
 #include <vector>
 #include "Edge.h"
+#include "GameManager.h"
 
 
 using namespace std;
