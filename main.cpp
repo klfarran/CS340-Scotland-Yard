@@ -4,8 +4,10 @@
 
 #include <iostream>
 #include <vector>
-#include "Edge.h"
 
+#include "Edge.h"
+#include "Station.h"
+#include "GameManager.h"
 
 using namespace std;
 
@@ -14,7 +16,7 @@ using namespace std;
 		
 	Edge edge1(1, 8, TAXI | BUS);  // Combining TAXI and BUS using bitwise OR
 
-    // Create an edge that can be traversed by all transport types
+    //Create an edge that can be traversed by all transport types
     Edge edge2(8, 19, TAXI);
  
 	edge1.display();
