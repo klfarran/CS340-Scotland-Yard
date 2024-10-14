@@ -37,4 +37,7 @@ void Edge::display(){
 	if (hasTransportType(UNDERGROUND)){
 		cout << " Undergroud ";
 	} 
+	if (hasTransportType(RIVER)){
+		cout << " River ";
+	}
 }
