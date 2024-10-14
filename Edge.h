@@ -6,6 +6,7 @@ enum TransportType {
     TAXI = 1,          
     BUS = 2,           
     UNDERGROUND = 4,   
+	RIVER = 8; 
     
 };
 
