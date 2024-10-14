@@ -25,7 +25,7 @@ bool Edge:: hasTransportType(TransportType t){ //use for ifs
 }
 
 //display transport
-void Edge:: display(){
+void Edge::display(){
 	cout<<endl;
 	cout<< "E:"<<PointA<< " - " <<PointB<< " :type- ";
 	if (hasTransportType(TAXI)){

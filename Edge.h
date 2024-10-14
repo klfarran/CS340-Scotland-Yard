@@ -1,6 +1,6 @@
-#define EDGE_h
+#ifndef EDGE_H
+#define EDGE_H
 #include <iostream>
-
 
 enum TransportType {
     TAXI = 1,          
@@ -10,6 +10,7 @@ enum TransportType {
     
 };
 
+
 class Edge {
 private: 
 	int PointA;
@@ -17,6 +18,7 @@ private:
 	int Transport;
 	
 public:
+
 	Edge(int start, int end, int trans);
 	
 	int getPointA();
@@ -34,3 +36,4 @@ public:
 
 //how to check for legal transport type input
 
+#endif

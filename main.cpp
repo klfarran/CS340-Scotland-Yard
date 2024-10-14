@@ -4,13 +4,23 @@
 
 #include <iostream>
 #include <vector>
-#include "Edge.h"
 
+#include "Edge.h"
+#include "Station.h"
+#include "GameManager.h"
 
 using namespace std;
 
 
 	int main() {
+
+
+    //Create an edge that can be traversed by all transport types
+    Edge edge2(8, 19, TAXI);
+ 
+	edge1.display();
+    edge2.display();
+	
 
 Edge edge1  (1, 8, TAXI);
 Edge edge2  (1, 9, TAXI)  ;
@@ -885,3 +895,4 @@ display.edge40();
 	}
 	
 	
+
