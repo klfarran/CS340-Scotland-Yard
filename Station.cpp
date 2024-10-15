@@ -16,3 +16,10 @@
 	int Station::getStationNum() {
 		return stationNumber;
 	}
+	
+	void Station::displayStationInfo(){
+		cout << "Station number: " << stationNumber << " with edges: \n";
+		for(int i = 0; i < edges.size(); i ++) {
+			cout << edges[i].display() << endl;
+		}
+	}

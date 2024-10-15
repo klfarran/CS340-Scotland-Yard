@@ -12,6 +12,7 @@ class Station {
 	
 	public:
 		int getStationNum();
+		void displayStationInfo();
 	
 	private: 
 		int stationNumber;
