@@ -13,7 +13,6 @@ class Station {
 	public:
 		int getStationNum();
 		void displayStationInfo();
-		void setEdges(int numArgs, ...);
 	
 	private: 
 		int stationNumber;
