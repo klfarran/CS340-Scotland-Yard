@@ -6,6 +6,7 @@
 	#include "GameManager.h"
 	#include "Station.h"
 	#include "Edge.h"
+	#include "Player.h"
 	
 	using namespace std;
 
@@ -101,3 +102,52 @@
 		
 		return board;
 	}
+
+	void GameManager::gameLoop(Player& mrX, vector<Player>& detectives, vector<Station>& board) {
+    	bool gameOver = false;
+
+    	// Start the game loop
+    	while (!gameOver) {
+        
+			// Display current round
+			cout << "Round " << round << " begins!" << endl;
+
+			// Mr. X's turn
+			cout << "Mr. X's turn!" << endl;
+
+			// Show available moves for Mr. X, this still needs to be implemented
+
+			// Decide move
+
+			// Ask if Mr. X wants to use a double move
+
+			// If yes, use double move, if not, use single move
+
+			// Detectives' turn
+			cout << "Detectives' turn!" << endl;
+
+			for (auto& detective : detectives) {
+				cout << "Detective at station " << detective.getCurrentStation()->getStationNum() << " is moving..." << endl;
+
+				// Show available moves for this detective
+
+				// Decide move
+
+				// Perform the move
+
+				// Check if detective found Mr. X
+			}
+
+			// Check if the round count has reached the endgame, 24 rounds
+			if (round == 24) {
+				cout << "Maximum rounds reached. Mr. X wins!" << endl;
+				gameOver = true;
+			}
+
+			// Increment round
+			round++;
+
+			// Continue to the next round unless gameOver is true
+    	}
+	}
+
