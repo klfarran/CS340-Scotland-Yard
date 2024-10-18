@@ -11,6 +11,7 @@ class GameManager {
 	public:
 		int getRound();
 		vector<Station> initializeBoard();
+		void gameLoop(Player& mrX, vector<Player>& detectives, vector<Station>& board);
 		
 	
 	private: 

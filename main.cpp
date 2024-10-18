@@ -12,7 +12,7 @@
 using namespace std;
 
 
-	int main() {
+int main() {
 
 
     //Create an edge that can be traversed by all transport types
@@ -23,7 +23,7 @@ using namespace std;
 
 
 	display.edge40();	
-	}
+}
 	
 	
 
