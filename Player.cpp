@@ -39,6 +39,13 @@ Player::Player(bool isMrX, Station* startStation) {
         doubleMoves = 0;
     }
 
+    // Assign boat tickets (only Mr. X)
+    if (isMrX) {
+        boatTickets = 1;
+    } else {
+        boatTickets = 0;
+    }
+
     // Set player's current station
     currentStation = startStation;
 }
@@ -46,44 +53,65 @@ Player::Player(bool isMrX, Station* startStation) {
 
 // Getters
 bool Player::getIsMrX() const { 
-    return isMrX; }
+    return isMrX; 
+}
 
 int Player::getTaxiTickets() const { 
-    return taxiTickets; }
+    return taxiTickets; 
+}
 
 int Player::getBusTickets() const { 
-    return busTickets; }
+    return busTickets; 
+}
 
 int Player::getSubwayTickets() const { 
-    return subwayTickets; }
+    return subwayTickets; 
+}
 
 int Player::getBlackTickets() const { 
-    return blackTickets; }
+    return blackTickets; 
+}
+
+int Player::getBoatTickets() const { 
+    return boatTickets; 
+}
 
 int Player::getDoubleMoves() const { 
-    return doubleMoves; }
+    return doubleMoves; 
+}
 
 Station* Player::getCurrentStation() const { 
-    return currentStation; }
+    return currentStation; 
+}
 
 // Setters
 void Player::setTaxiTickets(int tickets) { 
-    taxiTickets = tickets; }
+    taxiTickets = tickets; 
+}
 
 void Player::setBusTickets(int tickets) { 
-    busTickets = tickets; }
+    busTickets = tickets; 
+}
 
 void Player::setSubwayTickets(int tickets) { 
-    subwayTickets = tickets; }
+    subwayTickets = tickets; 
+}
 
 void Player::setBlackTickets(int tickets) { 
-    blackTickets = tickets; }
+    blackTickets = tickets; 
+}
+
+void Player::setBoatTickets(int tickets) { 
+    boatTickets = tickets; 
+}
 
 void Player::setDoubleMoves(int moves) { 
-    doubleMoves = moves; }
+    doubleMoves = moves; 
+}
 
 void Player::setCurrentStation(Station* station) { 
-    currentStation = station; }
+    currentStation = station; 
+}
 
 // Check if the player can move using a specific transport type
 bool Player::canMove(int transportType) const {
