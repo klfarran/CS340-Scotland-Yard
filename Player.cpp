@@ -39,13 +39,6 @@ Player::Player(bool isMrX, Station* startStation) {
         doubleMoves = 0;
     }
 
-    // Assign boat tickets (only Mr. X)
-    if (isMrX) {
-        boatTickets = 1;
-    } else {
-        boatTickets = 0;
-    }
-
     // Set player's current station
     currentStation = startStation;
 }
@@ -72,10 +65,6 @@ int Player::getBlackTickets() const {
     return blackTickets; 
 }
 
-int Player::getBoatTickets() const { 
-    return boatTickets; 
-}
-
 int Player::getDoubleMoves() const { 
     return doubleMoves; 
 }
@@ -99,10 +88,6 @@ void Player::setSubwayTickets(int tickets) {
 
 void Player::setBlackTickets(int tickets) { 
     blackTickets = tickets; 
-}
-
-void Player::setBoatTickets(int tickets) { 
-    boatTickets = tickets; 
 }
 
 void Player::setDoubleMoves(int moves) { 

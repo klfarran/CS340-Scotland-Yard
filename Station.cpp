@@ -2,6 +2,7 @@
 	#include <iostream>
 	
 	#include "Edge.h"
+	#include "Station.h"
 	
 	using namespace std;
 
@@ -44,7 +45,7 @@
 	vector<int> Station::getNextStations(TransportType T){
 		vector<int> adjacents;
 		for(int i = 0; i < edges.size(); i++) {
-		    if(edges[i].hasTransportType(t))
+		    if(edges[i].hasTransportType(T))
 		     adjacents.push_back(edges[i]);
 		}
 

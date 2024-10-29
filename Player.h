@@ -11,7 +11,6 @@ private:
     int subwayTickets;
     int blackTickets;  // Only Mr. X
     int doubleMoves;   // Only Mr. X
-    int boatTickets;   // Only Mr. X
     Station* currentStation;  // Current location of the player
 
 public:
@@ -25,7 +24,6 @@ public:
     int getSubwayTickets() const;
     int getBlackTickets() const;
     int getDoubleMoves() const;
-    int getBoatTickets() const;
     Station* getCurrentStation() const;
 
     // Setters
@@ -34,7 +32,6 @@ public:
     void setSubwayTickets(int tickets);
     void setBlackTickets(int tickets);
     void setDoubleMoves(int moves);
-    void setBoatTickets(int tickets);
     void setCurrentStation(Station* station);
 
     // Methods
