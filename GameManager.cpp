@@ -114,14 +114,59 @@
 
 			// Mr. X's turn
 			cout << "Mr. X's turn!" << endl;
+        
+			// Show available moves for Mr. X
+			vector<int> possibleMoves = mrX.getCurrentStation()->getAllAdjacentStations();
+			cout << "Mr. X is at station " << mrX.getCurrentStation()->getStationNum() << ". Available moves: ";
+			for (int stationNum : possibleMoves) {
+				cout << stationNum << " ";
+			}
+			cout << endl;
 
-			// Show available moves for Mr. X, this still needs to be implemented
+			// Mr. X Double move
+			char useDoubleMove;
+			cout << "Do you want to use a double move? (y/n): ";
+			cin >> useDoubleMove;
 
-			// Decide move
+			if(useDoubleMove == 'y' && mrX.getDoubleMoves > 0??){
+				// Ask for the transport type and destination for Mr. X's first move
+				int firstStation, firstTransport;
+				cout << "Enter the first destination station number: ";
+				cin >> firstStation;
+				cout << "Enter the second transport type (1: Taxi, 2: Bus, 3: Subway, 4: Black Ticket): ";
+				cin >> firstTransport;
 
-			// Ask if Mr. X wants to use a double move
+				// Ask for the transport type and destination for Mr. X's double move
+				int doubleStation, doubleTransport;
+				cout << "Enter the first destination station number: ";
+				cin >> doubleStation;
+				cout << "Enter the second transport type (1: Taxi, 2: Bus, 3: Subway, 4: Black Ticket): ";
+				cin >> doubleTransport;	
 
-			// If yes, use double move, if not, use single move
+				// Move Mr. X if possible
+				if (mrX.canMove(firstTransport) && mrX.canMove(doubleTransport)) {
+					mrX.moveWithDouble(&board[firstStation - 1], &board[doubleStation - 1]);
+					cout << "Mr. X used a double move and moved to station " << mrX.getCurrentStation()->getStationNum() << endl;
+				} else {
+					cout << "Invalid move." << endl;
+				}							
+			}
+			else{
+				// Ask for the transport type and destination for Mr. X
+				int chosenStation, chosenTransport;
+				cout << "Enter the destination station number: ";
+				cin >> chosenStation;
+				cout << "Enter the transport type (1: Taxi, 2: Bus, 3: Subway, 4: Black Ticket): ";
+				cin >> chosenTransport;
+
+				// Move Mr. X if possible
+				if (mrX.canMove(chosenTransport)) {
+					mrX.move(&board[chosenStation - 1], chosenTransport);
+					cout << "Mr. X moved to station " << mrX.getCurrentStation()->getStationNum() << endl;
+				} else {
+					cout << "Invalid move. Mr. X cannot move with this transport type." << endl;
+				}
+			}
 
 			// Detectives' turn
 			cout << "Detectives' turn!" << endl;
@@ -129,13 +174,29 @@
 			for (auto& detective : detectives) {
 				cout << "Detective at station " << detective.getCurrentStation()->getStationNum() << " is moving..." << endl;
 
-				// Show available moves for this detective
+				// Show available moves for detectives
+				vector<int> possibleMoves = detective.getCurrentStation()->getAllAdjacentStations();
+				// Change so that it's detective green, yellow, etc
+				cout << "Detective is at station " << detective.getCurrentStation()->getStationNum() << ". Available moves: ";
+				for (int stationNum : possibleMoves) {
+					cout << stationNum << " ";
+				}
+				cout << endl;
 
-				// Decide move
+				// Ask for the transport type and destination for Mr. X
+				int chosenStation, chosenTransport;
+				cout << "Enter the destination station number: ";
+				cin >> chosenStation;
+				cout << "Enter the transport type (1: Taxi, 2: Bus, 3: Subway): ";
+				cin >> chosenTransport;
 
-				// Perform the move
-
-				// Check if detective found Mr. X
+				// Move Mr. X if possible
+				if (detective.canMove(chosenTransport)) {
+					detective.move(&board[chosenStation - 1], chosenTransport);
+					cout << "Detective moved to station " << detective.getCurrentStation()->getStationNum() << endl;
+				} else {
+					cout << "Invalid move. Detective cannot move with this transport type." << endl;
+				}
 			}
 
 			// Check if the round count has reached the endgame, 24 rounds
