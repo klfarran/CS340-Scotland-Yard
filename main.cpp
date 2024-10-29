@@ -18,11 +18,18 @@ int main() {
     //Create an edge that can be traversed by all transport types
     Edge edge2(8, 19, TAXI);
  
-	edge1.display();
-    edge2.display();
-
-
-	display.edge40();	
+	//edge1.display();
+    //edge2.display();
+	
+	//print out the game board if necessary for debugging: 
+	/*
+	GameManager gameManager;
+	vector<Station> board = gameManager.initializeBoard();
+	
+	for(int i = 0; i < board.size(); i++) {
+		board[i].displayStationInfo();
+	}
+	*/
 }
 	
 	

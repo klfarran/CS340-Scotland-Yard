@@ -1,5 +1,6 @@
 
 	#include <iostream>
+	#include <vector>
 	
 	#include "Edge.h"
 	#include "Station.h"
@@ -19,10 +20,11 @@
 	}
 	
 	void Station::displayStationInfo(){
-		cout << "Station number: " << stationNumber << " with edges: \n";
+		cout << "\nStation number: " << stationNumber << " with edges:";
 		for(int i = 0; i < edges.size(); i ++) {
-			cout << edges[i].display() << endl;
+			edges[i].display();
 		}
+		cout << endl;
 	}
 	
 	void Station::setEdges(vector<Edge> inEdges) {
@@ -42,11 +44,11 @@
 	}
 
 	//returns all the stations adjacent to the current station, regardless of transportation type 
-	vector<int> Station::getNextStations(TransportType T){
+	vector<int> Station::getNextStations(TransportType t){
 		vector<int> adjacents;
 		for(int i = 0; i < edges.size(); i++) {
-		    if(edges[i].hasTransportType(T))
-		     adjacents.push_back(edges[i]);
+		    if(edges[i].hasTransportType(t))
+		     adjacents.push_back(edges[i].getPointB());
 		}
 
 	    return adjacents;
