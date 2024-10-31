@@ -18,7 +18,7 @@ class Station {
 		int getStationNum();
 		void displayStationInfo();
 		void setEdges(vector<Edge> inEdges);
-		vector<int> getAllAdjacentStations();
+		vector<int> getAllAdjacentStations(vector<int> locations);
 		vector<int> getNextStations(TransportType T);
 	
 	private: 

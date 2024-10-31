@@ -33,17 +33,25 @@
 
 
 	//returns a vector of ints which are the station numbers of the stations which are adjacent to the station object the 
-		//function is called on
-	vector<int>Station::getAllAdjacentStations() {
+		//function is called on, regardless of transportation method 
+	vector<int>Station::getAllAdjacentStations(vector<int> locations) {
 		vector<int> adjacents;
+		bool isOpen;
 		for(int i = 0; i < edges.size(); i++) {
+			isOpen = true; //for each destination station, we start by assuming that its "open" (there are no detectives already there)
+			for(int j = 0; j < locations.size(); j++) {
+				if(locations[j] == edges[i].getPointB()) //our (current) destination station is the same as some station that a detective is at
+					isOpen = false; //so this station is not "open"
+			}
+			
+			if(isOpen) //this next station is not currently occupied by any player 
 		   adjacents.push_back(edges[i].getPointB()); //destination station from our station cur
 		}
 		
 	   return adjacents;
 	}
 
-	//returns all the stations adjacent to the current station, regardless of transportation type 
+	//returns all the stations adjacent to the current station only of transportation type t 
 	vector<int> Station::getNextStations(TransportType t){
 		vector<int> adjacents;
 		for(int i = 0; i < edges.size(); i++) {
