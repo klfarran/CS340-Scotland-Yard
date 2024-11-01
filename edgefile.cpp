@@ -20,6 +20,10 @@ int Edge::getPointB(){
 	return PointB;
 }
 
+int Edge::getTransport() {
+	return Transport;
+}
+
 bool Edge:: hasTransportType(TransportType t){ //use for ifs
 	return (Transport & t) !=0; //checking if transport type exists
 }
