@@ -23,6 +23,7 @@ public:
 	
 	int getPointA();
 	int getPointB();
+	int getTransport();
 	
 	bool hasTransportType(TransportType t);
 	//what transport is legal
