@@ -11,11 +11,17 @@ using namespace std;
 class Station {
 	
 	public:
+		//contructor
+		Station(int inStationNumber, vector<Edge> inEdges);
+		
+		//methods
 		int getStationNum();
 		void displayStationInfo();
+		vector<Edge> getEdges();
 		void setEdges(vector<Edge> inEdges);
-		vector<int> getAllAdjacentStations();
+		vector<int> getAllAdjacentStations(vector<int> locations);
 		vector<int> getNextStations(TransportType T);
+		bool equals(Station other);
 	
 	private: 
 		int stationNumber;

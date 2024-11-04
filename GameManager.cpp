@@ -11,7 +11,7 @@
 	using namespace std;
 
 
-	//contructor	
+	//constructor	
 	GameManager::GameManager(){
 		//game has to start on round 0, can't start game in middle of rounds
 		round = 0; 
@@ -116,7 +116,7 @@
 			cout << "Mr. X's turn!" << endl;
         
 			// Show available moves for Mr. X
-			vector<int> possibleMoves = mrX.getCurrentStation()->getAllAdjacentStations();
+			vector<int> possibleMoves = mrX.getCurrentStation()->getAllAdjacentStations(getDetectiveLocations(detectives));
 			cout << "Mr. X is at station " << mrX.getCurrentStation()->getStationNum() << ". Available moves: ";
 			for (int stationNum : possibleMoves) {
 				cout << stationNum << " ";
@@ -128,7 +128,7 @@
 			cout << "Do you want to use a double move? (y/n): ";
 			cin >> useDoubleMove;
 
-			if(useDoubleMove == 'y' && mrX.getDoubleMoves > 0??){
+			if(useDoubleMove == 'y' && mrX.getDoubleMoves() > 0){//??
 				// Ask for the transport type and destination for Mr. X's first move
 				int firstStation, firstTransport;
 				cout << "Enter the first destination station number: ";
@@ -175,7 +175,7 @@
 				cout << "Detective at station " << detective.getCurrentStation()->getStationNum() << " is moving..." << endl;
 
 				// Show available moves for detectives
-				vector<int> possibleMoves = detective.getCurrentStation()->getAllAdjacentStations();
+				vector<int> possibleMoves = detective.getCurrentStation()->getAllAdjacentStations(getDetectiveLocations(detectives));
 				// Change so that it's detective green, yellow, etc
 				cout << "Detective is at station " << detective.getCurrentStation()->getStationNum() << ". Available moves: ";
 				for (int stationNum : possibleMoves) {
@@ -210,5 +210,17 @@
 
 			// Continue to the next round unless gameOver is true
     	}
+	}
+	
+	//function which takes a list of detectives (players minus mrX) and returns a vector of integers which are the 
+	//corresponding station numbers of the station that each detective is at 
+	vector<int> GameManager::getDetectiveLocations(vector<Player> detectives) {
+		vector<int> locations;
+		
+		for(int i = 0; i < detectives.size(); i++) {
+			locations.push_back(detectives[i].getCurrentStation()->getStationNum());
+		}
+		
+		return locations;
 	}
 
