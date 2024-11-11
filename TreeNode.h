@@ -9,19 +9,30 @@ using namespace std;
 
 	class TreeNode{
 		public:
-		vector<TreeNode*> getChildren() const;
-		void setChildren(vector<TreeNode*> inChildren);
+		
+		//Constructor
+		TreeNode(Station* station, vector<TreeNode> children);
+		TreeNode();
+		
+		//Getters
+		vector<TreeNode> getChildren() const;
 		int getNumChildren() const;
-		void setChild(int pos, TreeNode* T);
-		TreeNode* getChild(int stationNumber) const;
-		void setStation(Station* newStation);
+		TreeNode getChild(int stationNumber) const;
 		Station* getStation() const;
+		void getLeaves(TreeNode root, vector<TreeNode>& leaves) const;
+		
+		//Setters
+		void setChildren(vector<TreeNode> inChildren);
+		void setChild(int pos, TreeNode T);	
+		void setStation(Station* newStation);
+
+		//Other Functions
 		bool isLeaf();
-		vector<TreeNode*> getLeaves(TreeNode* root, vector<TreeNode*>& leaves) const;
+		
 
 	private:
 		Station* station; 
-		vector<TreeNode*> children;
+		vector<TreeNode> children;
 	};
 
 #endif

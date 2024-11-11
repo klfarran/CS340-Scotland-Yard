@@ -7,6 +7,7 @@
 	#include "Station.h"
 	#include "Edge.h"
 	#include "Player.h"
+	#include "TreeNode.h"
 	
 	using namespace std;
 
@@ -105,6 +106,8 @@
 
 	void GameManager::gameLoop(Player& mrX, vector<Player>& detectives, vector<Station>& board) {
     	bool gameOver = false;
+		TreeNode possibleMrXLocations;
+
 
     	// Start the game loop
     	while (!gameOver) {
@@ -163,6 +166,12 @@
 				if (mrX.canMove(chosenTransport)) {
 					mrX.move(&board[chosenStation - 1], chosenTransport);
 					cout << "Mr. X moved to station " << mrX.getCurrentStation()->getStationNum() << endl;
+					
+					if(round == 3 || round == 8 || round == 13 || round == 18) //or first half of a double move,...
+						possibleMrXLocations = Build_Tree(mrX.getCurrentStation(), board, mrX, detectives);	
+					else
+						AddNextPossibleMrXLocations(possibleMrXLocations, board, mrX, detectives);
+					
 				} else {
 					cout << "Invalid move. Mr. X cannot move with this transport type." << endl;
 				}
@@ -223,4 +232,37 @@
 		
 		return locations;
 	}
+	
+	TreeNode GameManager::Build_Tree(Station* station, vector<Station>& board, Player& mrX, vector<Player> detectives) {
+		vector<TreeNode> children;
+		vector<TreeNode> childrensChildren = {};
+	
+		vector<int> adjacentStationNumbers = station->getAllAdjacentStations(getDetectiveLocations(detectives), mrX.getTaxiTickets(), mrX.getBusTickets(), mrX.getSubwayTickets());
+			for(int i = 0; i < adjacentStationNumbers.size(); i++) {
+				TreeNode child(&board[adjacentStationNumbers[i-1]], childrensChildren); //remember board starts at 0, station numbers start at 1
+				children.push_back(child);
+			}
+		TreeNode root(station, children);
+		return root;
+	}
+
+
+	void GameManager::AddNextPossibleMrXLocations(TreeNode possibleMrXLocations, vector<Station>& board, Player& mrX, vector<Player>& detectives) {
+	//improve after finishing to add pruning
+		//go to every leaf of the tree and add all possible next stations as children of each 
+		vector<TreeNode> leaves; 
+		vector<TreeNode> childrensChildren = {};
+		possibleMrXLocations.getLeaves(possibleMrXLocations, leaves); //updates leaves vector to contain all leaves from tree rooted at possibleMrXLocations
+		
+		for(TreeNode leaf : leaves) {
+			vector<TreeNode> children;
+			vector<int> adjacentStationNumbers = leaf.getStation()->getAllAdjacentStations(getDetectiveLocations(detectives), mrX.getTaxiTickets(), mrX.getBusTickets(), mrX.getSubwayTickets());
+			for(int i = 0; i < adjacentStationNumbers.size(); i++) {
+				TreeNode child(&board[adjacentStationNumbers[i-1]], childrensChildren); //remember board starts at 0, station numbers start at 1
+				children.push_back(child);
+			}	
+		    leaf.setChildren(children);
+		}
+	}
+
 
