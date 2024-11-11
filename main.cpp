@@ -132,12 +132,7 @@ int main() {
 		detectives[i].setTaxiTickets(10);
 		detectives[i].setBusTickets(8);
 		detectives[i].setSubwayTickets(4);
-		detectives[i].getCurrentStation()->displayStationInfo();
 	}
-	
-	//cout << "Press any key to start the game" << endl;
-	//int blah;
-	//cin >> blah;
 	
 	
 	//start the game 
