@@ -116,7 +116,7 @@
 			cout << "Mr. X's turn!" << endl;
         
 			// Show available moves for Mr. X
-			vector<int> possibleMoves = mrX.getCurrentStation()->getAllAdjacentStations(getDetectiveLocations(detectives));
+			vector<int> possibleMoves = mrX.getCurrentStation()->getAllAdjacentStations(getDetectiveLocations(detectives), mrX.getTaxiTickets(), mrX.getBusTickets(), mrX.getSubwayTickets());
 			cout << "Mr. X is at station " << mrX.getCurrentStation()->getStationNum() << ". Available moves: ";
 			for (int stationNum : possibleMoves) {
 				cout << stationNum << " ";
@@ -175,7 +175,7 @@
 				cout << "Detective at station " << detective.getCurrentStation()->getStationNum() << " is moving..." << endl;
 
 				// Show available moves for detectives
-				vector<int> possibleMoves = detective.getCurrentStation()->getAllAdjacentStations(getDetectiveLocations(detectives));
+				vector<int> possibleMoves = detective.getCurrentStation()->getAllAdjacentStations(getDetectiveLocations(detectives), detective.getTaxiTickets(), detective.getBusTickets(), detective.getSubwayTickets());
 				// Change so that it's detective green, yellow, etc
 				cout << "Detective is at station " << detective.getCurrentStation()->getStationNum() << ". Available moves: ";
 				for (int stationNum : possibleMoves) {
