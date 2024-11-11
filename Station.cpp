@@ -66,18 +66,10 @@
 	    return adjacents;
 	}
 	
+	//returns true if the station other is 'equal' to the current station, meaning that it has the 
+	//same station number as the current station; otherwise, return false 
 	bool Station::equals(Station other) {
-		
-		if(edges.size() != other.getEdges().size() || stationNumber != other.getStationNum())
-			return false; 
-		else  {//check every edge coming out of both stations to be equal (or not)
-		
-			for(int i = 0; i < edges.size(); i++) { //edges and other.getEdges are the same size because we passed our check above
-				if(edges[i].getPointA() == other.getEdges()[i].getPointA() && edges[i].getPointB() == other.getEdges()[i].getPointB() && edges[i].getTransport() == other.getEdges()[i].getTransport())
-					return false;
-			}
-			return true; //passes all checks 
-		}
-	
+		//because all stations have a unique station number, we can distinguish station using only their station number
+		return stationNumber == other.getStationNum();
 	}
 	
