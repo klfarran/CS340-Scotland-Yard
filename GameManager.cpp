@@ -2,12 +2,13 @@
 	#include <iostream>
 	#include <fstream>
 	#include <sstream>
-
-	#include "GameManager.h"
+	
 	#include "Station.h"
 	#include "Edge.h"
 	#include "Player.h"
 	#include "TreeNode.h"
+	#include "GameManager.h"
+	#include "DetectiveStrategy.h"
 	
 	using namespace std;
 
@@ -108,6 +109,10 @@
     	bool gameOver = false;
 		TreeNode possibleMrXLocations;
 
+		//pass detectives to detective strategy class to initialize the detective strategy object 
+		//possible future upgrade- DetectiveStrategy initializes detectives (with all tickets and such) rather than main
+		DetectiveStrategy detectiveStrategy(detectives);
+	
 
     	// Start the game loop
     	while (!gameOver) {

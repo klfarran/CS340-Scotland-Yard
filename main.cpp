@@ -10,6 +10,7 @@
 #include "Edge.h"
 #include "Station.h"
 #include "GameManager.h"
+#include "DetectiveStrategy.h"
 
 using namespace std;
 
@@ -133,7 +134,6 @@ int main() {
 		detectives[i].setBusTickets(8);
 		detectives[i].setSubwayTickets(4);
 	}
-	
 	
 	//start the game 
 	gameManager.gameLoop(mrX, detectives, board);
