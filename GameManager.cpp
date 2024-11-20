@@ -8,6 +8,7 @@
 	#include "Player.h"
 	#include "TreeNode.h"
 	#include "GameManager.h"
+	#include "DetectiveStrategy.h"
 	
 	using namespace std;
 
