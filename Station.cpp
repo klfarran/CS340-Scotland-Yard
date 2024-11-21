@@ -38,7 +38,7 @@
 
 	//returns a vector of ints which are the station numbers of the stations which are adjacent to the station object the 
 		//function is called on, regardless of transportation method 
-	vector<int>Station::getAllAdjacentStations(vector<int> locations) {
+	vector<int>Station::getAllAdjacentStations(vector<int> locations, int taxiTickets, int busTickets, int undTickets) {
 		vector<int> adjacents;
 		bool isOpen;
 		for(int i = 0; i < edges.size(); i++) {
@@ -48,8 +48,12 @@
 					isOpen = false; //so this station is not "open"
 			}
 			
-			if(isOpen) //this next station is not currently occupied by any player 
-		   adjacents.push_back(edges[i].getPointB()); //destination station from our station cur
+			if(isOpen) { //this next station is not currently occupied by any player 
+				//check to see if we have a ticket to get there 
+				int transport = edges[i].getTransport();
+				if(transport == 1 && taxiTickets > 0 || transport == 2 && busTickets > 0 || transport == 4 && undTickets > 0) 
+					adjacents.push_back(edges[i].getPointB()); //destination station from our station cur
+			}
 		}
 		
 	   return adjacents;
@@ -66,18 +70,10 @@
 	    return adjacents;
 	}
 	
+	//returns true if the station other is 'equal' to the current station, meaning that it has the 
+	//same station number as the current station; otherwise, return false 
 	bool Station::equals(Station other) {
-		
-		if(edges.size() != other.getEdges().size() || stationNumber != other.getStationNum())
-			return false; 
-		else  {//check every edge coming out of both stations to be equal (or not)
-		
-			for(int i = 0; i < edges.size(); i++) { //edges and other.getEdges are the same size because we passed our check above
-				if(edges[i].getPointA() == other.getEdges()[i].getPointA() && edges[i].getPointB() == other.getEdges()[i].getPointB() && edges[i].getTransport() == other.getEdges()[i].getTransport())
-					return false;
-			}
-			return true; //passes all checks 
-		}
-	
+		//because all stations have a unique station number, we can distinguish station using only their station number
+		return stationNumber == other.getStationNum();
 	}
 	
