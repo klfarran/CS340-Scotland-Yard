@@ -124,7 +124,7 @@
 			cout << "Mr. X's turn!" << endl;
         
 			// Show available moves for Mr. X, only reveal location on rounds 3, 8, 13, 18, 24
-			vector<int> possibleMoves = mrX.getCurrentStation()->getAllAdjacentStations(getDetectiveLocations(detectives));
+			vector<int> possibleMoves = mrX.getCurrentStation()->getAllAdjacentStations(getDetectiveLocations(detectives), mrX.getTaxiTickets(),mrX.getBusTickets(), mrX.getSubwayTickets());
 			if(round == 3 || round == 8 || round == 13 || round == 18 || round == 24){
 				cout << "Mr. X is at station " << mrX.getCurrentStation()->getStationNum() << ". Available moves: ";
 			}
@@ -195,7 +195,7 @@
 				cout << "Detective #" << detectiveNum << " at station " << detective.getCurrentStation()->getStationNum() << " is moving..." << endl;
 
 				// Show available moves for current detective
-				vector<int> possibleMoves = detective.getCurrentStation()->getAllAdjacentStations(getDetectiveLocations(detectives));
+				vector<int> possibleMoves = detective.getCurrentStation()->getAllAdjacentStations(getDetectiveLocations(detectives), mrX.getTaxiTickets(),mrX.getBusTickets(), mrX.getSubwayTickets());
 				cout << "Detective #" << detectiveNum << " is at station " << detective.getCurrentStation()->getStationNum() << ". Available moves: ";
 				for (int stationNum : possibleMoves) {
 					cout << stationNum << " ";
