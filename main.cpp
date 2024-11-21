@@ -5,10 +5,12 @@
 #include <iostream>
 #include <cstdlib>
 #include <vector>
+#include <ctime>
 
 #include "Edge.h"
 #include "Station.h"
 #include "GameManager.h"
+#include "DetectiveStrategy.h"
 
 using namespace std;
 
@@ -19,6 +21,8 @@ using namespace std;
 			if(drawn[i].equals(chosen))
 				return true;
 		}
+		
+		
 		return false;
 	}
 	
@@ -28,6 +32,7 @@ using namespace std;
 			int random = rand() %18; //random number between 0 and 17
 			Station chosen = possibleStarts[random];
 		while(contains(drawn, chosen)) {
+			srand(time(0)); //seed random number generator using current time(required to not get the same sequence of random numbers)
 			random = rand() %18; //new random number between 0 and 17
 			chosen = possibleStarts[random]; //new random station
 		   }
@@ -80,10 +85,6 @@ int main() {
 	possibleStarts.push_back(board[174-1]);
 	possibleStarts.push_back(board[197-1]);
 	possibleStarts.push_back(board[198-1]);
-	
-	cout << "Press any key to start the game" << endl;
-	int blah;
-	cin >> blah;
 
 
 	vector<Station> drawn; //keeps track of the start stations which already have players placed on them/ have already been 'drawn'/ chosen
