@@ -39,7 +39,7 @@ public:
 
     // Methods
     bool canMove(int transportType) const;
-    void move(Station* destination, int transportType);
+    void move(Station* destination, int transportType, Player& mrX);
     void moveWithDouble(Station* destination1, Station* destination2);
 };
 

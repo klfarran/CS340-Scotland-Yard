@@ -123,9 +123,14 @@
 			// Mr. X's turn
 			cout << "Mr. X's turn!" << endl;
         
-			// Show available moves for Mr. X
-			vector<int> possibleMoves = mrX.getCurrentStation()->getAllAdjacentStations(getDetectiveLocations(detectives), mrX.getTaxiTickets(), mrX.getBusTickets(), mrX.getSubwayTickets());
-			cout << "Mr. X is at station " << mrX.getCurrentStation()->getStationNum() << ". Available moves: ";
+			// Show available moves for Mr. X, only reveal location on rounds 3, 8, 13, 18, 24
+			vector<int> possibleMoves = mrX.getCurrentStation()->getAllAdjacentStations(getDetectiveLocations(detectives), mrX.getTaxiTickets(),mrX.getBusTickets(), mrX.getSubwayTickets());
+			if(round == 3 || round == 8 || round == 13 || round == 18 || round == 24){
+				cout << "Mr. X is at station " << mrX.getCurrentStation()->getStationNum() << ". Available moves: ";
+			}
+			else{
+				cout << "Mr. X's location is hidden. Available moves: ";
+			}
 			for (int stationNum : possibleMoves) {
 				cout << stationNum << " ";
 			}
@@ -136,7 +141,7 @@
 			cout << "Do you want to use a double move? (y/n): ";
 			cin >> useDoubleMove;
 
-			if(useDoubleMove == 'y' && mrX.getDoubleMoves() > 0){//??
+			if(useDoubleMove == 'y' && mrX.getDoubleMoves() > 0){
 				// Ask for the transport type and destination for Mr. X's first move
 				int firstStation, firstTransport;
 				cout << "Enter the first destination station number: ";
@@ -169,7 +174,7 @@
 
 				// Move Mr. X if possible
 				if (mrX.canMove(chosenTransport)) {
-					mrX.move(&board[chosenStation - 1], chosenTransport);
+					mrX.move(&board[chosenStation - 1], chosenTransport, mrX);
 					cout << "Mr. X moved to station " << mrX.getCurrentStation()->getStationNum() << endl;
 					
 					if(round == 3 || round == 8 || round == 13 || round == 18) //or first half of a double move,...
@@ -185,32 +190,34 @@
 			// Detectives' turn
 			cout << "Detectives' turn!" << endl;
 
+			int detectiveNum = 1;
 			for (auto& detective : detectives) {
-				cout << "Detective at station " << detective.getCurrentStation()->getStationNum() << " is moving..." << endl;
+				cout << "Detective #" << detectiveNum << " at station " << detective.getCurrentStation()->getStationNum() << " is moving..." << endl;
 
-				// Show available moves for detectives
-				vector<int> possibleMoves = detective.getCurrentStation()->getAllAdjacentStations(getDetectiveLocations(detectives), detective.getTaxiTickets(), detective.getBusTickets(), detective.getSubwayTickets());
-				// Change so that it's detective green, yellow, etc
-				cout << "Detective is at station " << detective.getCurrentStation()->getStationNum() << ". Available moves: ";
+				// Show available moves for current detective
+				vector<int> possibleMoves = detective.getCurrentStation()->getAllAdjacentStations(getDetectiveLocations(detectives), mrX.getTaxiTickets(),mrX.getBusTickets(), mrX.getSubwayTickets());
+				cout << "Detective #" << detectiveNum << " is at station " << detective.getCurrentStation()->getStationNum() << ". Available moves: ";
 				for (int stationNum : possibleMoves) {
 					cout << stationNum << " ";
 				}
 				cout << endl;
 
-				// Ask for the transport type and destination for Mr. X
+				// Ask for the transport type and destination for detective
 				int chosenStation, chosenTransport;
 				cout << "Enter the destination station number: ";
 				cin >> chosenStation;
 				cout << "Enter the transport type (1: Taxi, 2: Bus, 3: Subway): ";
 				cin >> chosenTransport;
 
-				// Move Mr. X if possible
+				// Move detective if possible
 				if (detective.canMove(chosenTransport)) {
-					detective.move(&board[chosenStation - 1], chosenTransport);
-					cout << "Detective moved to station " << detective.getCurrentStation()->getStationNum() << endl;
+					detective.move(&board[chosenStation - 1], chosenTransport, mrX);
+					cout << "Detective #" << detectiveNum << " moved to station " << detective.getCurrentStation()->getStationNum() << endl;
 				} else {
 					cout << "Invalid move. Detective cannot move with this transport type." << endl;
 				}
+
+				detectiveNum++;
 			}
 
 			// Check if the round count has reached the endgame, 24 rounds
