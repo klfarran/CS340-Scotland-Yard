@@ -42,9 +42,9 @@
 		}		
 	}
 	
-	Station DetectiveStrategy::breakTie(vector<Station> destinations) {
-		//If multiple detectives have the same choices for where to go, choose a destination 
-		//station that benefits the whole team by spreading detectives to cover more of mr. x’s potential moves
+	//If multiple detectives have the same choices for where to go, choose a destination 
+	//station that benefits the whole team by spreading detectives to cover more of mr. x’s potential moves
+	Station DetectiveStrategy::breakTie(vector<Station> destinations) {		
 		vector<Edge> edges;
 		return Station(0, edges);
 	}
@@ -53,11 +53,35 @@
 		//Execute moves based off of optimal move and tie breaking
 	}
 	
-	vector<Edge> DetectiveStrategy::pathToClosestSubway(Station start, int moves) {
-		//Returns a path to the nearest subway station that the detective can reach in x 
-		//number of moves, x being the number of moves before mr. x shows up
+	//Returns a vector<Edge> which is the path to the nearest subway station that the detective can reach in 'moves' number of moves
+	//'moves' is the number of moves before mr. x shows up
+	//'start' is the current station of the detective 
+	//TO-DO: in GameManager, need to create function getSubwayStations(vector<Station> board) to be able to pass the subway stations to this function 
+	//subway stations: 1, 46, 74, 93, 79, 111, 163, 153, 140, 185, 159, 13, 67, 89
+	vector<Edge> DetectiveStrategy::pathToClosestSubway(Player detective, int moves, vector<Station> subwayStations) {
+				
+			int shortestPath = INT_MAX;	
+			int curPath;
+			Station* closestSubStation;
+			Station* detectiveStation = detective.getCurrentStation();
+			
+			//call shortestPath between start and each subway station to see if any subway station is reachable in under 'moves' # of moves 
+			for(Station curSubStation : subwayStations) {
+				curPath = this->shortestPath(detective, *detectiveStation, curSubStation);
+				if(curPath < shortestPath && curPath < moves) {//path is shorter than current shortest path AND less than 'moves' # of moves
+					shortestPath = curPath;
+					closestSubStation = &curSubStation;
+				}
+			}			
+		
+		//TO-DO: we have closestSubwayStation, now we need to get the path to it and return it
 		vector<Edge> edges;
-		return edges;
+			return edges;
+
+		if(shortestPath == INT_MAX) { //no path to any subway station is < moves, return empty vector	
+			vector<Edge> edges;
+			return edges;
+		}
 	}
 	
 	vector<Station> DetectiveStrategy::getReachableStations(Station start, int movesRemaining) {

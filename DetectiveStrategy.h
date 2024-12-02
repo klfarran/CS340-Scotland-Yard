@@ -22,7 +22,7 @@ public:
 	Station chooseOptimalDetectiveMove(Player detective, TreeNode potentialMrXLocations);
 	Station breakTie(vector<Station> destinations);
 	void detectiveGreedyMove();
-	vector<Edge> pathToClosestSubway(Station start, int moves);
+	vector<Edge> pathToClosestSubway(Player detective, int moves, vector<Station> subwayStations);
 	vector<Station> getReachableStations(Station start, int movesRemaining);
 	int distanceToPotentialMrX();
 	int chooseBestTicket(Player detective, vector<int> availableTransports);
