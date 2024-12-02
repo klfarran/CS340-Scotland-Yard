@@ -113,21 +113,23 @@
 	
 	//Uses shortestPath and loops through mr. x’s potential locations and 
 	//selects the location with the minimal distance for the detective 'detective'
-	Station DetectiveStrategy::chooseOptimalDetectiveMove(Player detective, TreeNode potentialMrXLocations) {
+	Station DetectiveStrategy::chooseOptimalDetectiveMove(Player detective, TreeNode potentialMrXLocations, vector<Station> board) {
 		//leaves of the tree of potential mrX locations are the current potential mrx locations- get them 
 		vector<TreeNode> locations; 
 		potentialMrXLocations.getLeaves(potentialMrXLocations, locations); //locations is updated by reference to contain the leaves 
 		
-		int shortestPath = INT_MAX; //current shortest path found
-		int curPath;  //current path we're working with 
+		int shortestPathLen = INT_MAX; //current shortest path found
+		int curPathLen;  //current path we're working with 
+		vector<int> curPath;
 		Station* closestStation; 
 		Station* detectiveStation = detective.getCurrentStation();
 	
 		for(TreeNode curPotentialLoc : locations) {
 			Station* curPotStation = curPotentialLoc.getStation();
-			curPath = this->shortestPath(detective, *detectiveStation, *curPotStation);
-			if(curPath < shortestPath) {
-				shortestPath = curPath;
+			curPath = this->shortestPath(detective, *detectiveStation, *curPotStation, board);
+			curPathLen = curPath.size();
+			if(curPathLen < shortestPathLen) {
+				shortestPathLen = curPathLen;
 				closestStation = curPotStation;
 			}
 		}		
@@ -144,35 +146,31 @@
 		//Execute moves based off of optimal move and tie breaking
 	}
 	
-	//Returns a vector<Edge> which is the path to the nearest subway station that the detective can reach in 'moves' number of moves
+	//Returns a vector<int> which is the path (station #s in order) to the nearest subway station that the detective can reach in 'moves' number of moves
 	//'moves' is the number of moves before mr. x shows up
 	//'start' is the current station of the detective 
 	//TO-DO: in GameManager, need to create function getSubwayStations(vector<Station> board) to be able to pass the subway stations to this function 
 	//subway stations: 1, 46, 74, 93, 79, 111, 163, 153, 140, 185, 159, 13, 67, 89
-	vector<Edge> DetectiveStrategy::pathToClosestSubway(Player detective, int moves, vector<Station> subwayStations) {
+	vector<int> DetectiveStrategy::pathToClosestSubway(Player detective, int moves, vector<Station> subwayStations, vector<Station> board) {
 				
-			int shortestPath = INT_MAX;	
-			int curPath;
-			Station* closestSubStation;
+			int shortestPathLen = INT_MAX;	
+			int curPathLen;
+			vector<int> shortestPath;
 			Station* detectiveStation = detective.getCurrentStation();
 			
 			//call shortestPath between start and each subway station to see if any subway station is reachable in under 'moves' # of moves 
 			for(Station curSubStation : subwayStations) {
-				curPath = this->shortestPath(detective, *detectiveStation, curSubStation);
-				if(curPath < shortestPath && curPath < moves) {//path is shorter than current shortest path AND less than 'moves' # of moves
-					shortestPath = curPath;
-					closestSubStation = &curSubStation;
-				}
+				shortestPath = this->shortestPath(detective, *detectiveStation, curSubStation, board);
+				curPathLen = shortestPath.size();
+				if(curPathLen < shortestPathLen && curPathLen < moves) //path is shorter than current shortest path AND less than 'moves' # of moves
+					shortestPathLen = curPathLen;
 			}			
 		
-		//TO-DO: we have closestSubwayStation, now we need to get the path to it and return it
-		vector<Edge> edges;
-			return edges;
-
-		if(shortestPath == INT_MAX) { //no path to any subway station is < moves, return empty vector	
-			vector<Edge> edges;
-			return edges;
-		}
+		if(shortestPathLen == INT_MAX) { //no path to any subway station is < moves, return empty vector	
+			vector<int> emptyPath;
+			return emptyPath;
+		} else //we have a real shortestPath, return it
+			return shortestPath;
 	}
 	
 	vector<Station> DetectiveStrategy::getReachableStations(Station start, int movesRemaining) {
