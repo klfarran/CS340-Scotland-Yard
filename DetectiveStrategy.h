@@ -18,7 +18,7 @@ public:
     
 
     // Methods
-	int shortestPath(Player detective, Station start, Station end);
+	vector<int> shortestPath(Player detective, Station start, Station end, vector<Station> board);
 	Station chooseOptimalDetectiveMove(Player detective, TreeNode potentialMrXLocations);
 	Station breakTie(vector<Station> destinations);
 	void detectiveGreedyMove();
