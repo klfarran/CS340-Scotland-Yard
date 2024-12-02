@@ -77,3 +77,14 @@
 		return stationNumber == other.getStationNum();
 	}
 	
+	// Returns vector of all transport types between two stations
+	vector<int> Station::getAllTransportTypesTo(Station adjacent) const {
+		vector<int> transportTypes;
+		vector<Edge> edges = adjacent.getEdges();
+		for (Edge edge : edges) {
+			if (edge.getPointB() == adjacent.getStationNum()) {
+				transportTypes.push_back(edge.getTransport());
+			}
+		}
+		return transportTypes;
+	}
