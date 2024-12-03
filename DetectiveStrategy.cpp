@@ -1,6 +1,7 @@
 
 	#include "DetectiveStrategy.h"
-	#include <limits.h> //for INT_MAX
+	#include <limits> //for INT_MAX
+	#include <limits.h>
 	#include "Station.h"
 	#include "Edge.h"
 	#include "GameManager.h"
@@ -121,7 +122,6 @@
 		int shortestPathLen = INT_MAX; //current shortest path found
 		int curPathLen;  //current path we're working with 
 		vector<int> curPath;
-		Station* closestStation; 
 		Station* detectiveStation = detective.getCurrentStation();
 	
 		for(TreeNode curPotentialLoc : locations) {
@@ -130,9 +130,9 @@
 			curPathLen = curPath.size();
 			if(curPathLen < shortestPathLen) {
 				shortestPathLen = curPathLen;
-				closestStation = curPotStation;
 			}
-		}		
+		}
+			return board[curPath[0]-1]; 
 	}
 	
 	//If multiple detectives have the same choices for where to go, choose a destination 
@@ -142,9 +142,57 @@
 		return Station(0, edges);
 	}
 	
-	void DetectiveStrategy::detectiveGreedyMove() {
-		//Execute moves based off of optimal move and tie breaking
+	//pulls optimal moves and uses tie to decide which detective gets ahead.  
+//this needs the tree node vetor to show the potential X locations. 
+//the stations that rep the board. 
+void DetectiveStrategy::detectiveGreedyMove(vector<TreeNode> potentialMrXLocations, vector<Station> board) {
+//need to hold all of the stations that a detective goes to
+vector<int> detectiveDestinations(detectives.size());
+	
+	//go thorugh each detective and pulls the optimal move for that detective
+for (int i =0; i<detectives.size(); i++){
+	Player& detective = detectives[i];
+	int optimal = chooseOptimalDetectiveMove(detective, potentialMrXLocations, board).getStationNum();
+
+//make sure that the location has not conflict. 
+bool conflict = false;
+for (int j = 0; j < i; j++) {
+	//goes through destinations vector to make sure none are equal
+if (detectiveDestinations[j] == optimal) {
+	//is a detective already at that station, then make the conflict bool true
+conflict = true;
+}
+   }
+
+if (conflict) {
+//making a vectore to hold the stations with conflicts 
+vector<Station> conflictingDestinations;
+conflictingDestinations.push_back(board[optimal -1]);
+//when a station has a conflict dont move rhat detective. -1 keeps detective in same place 
+//get a different station from break tie 
+int resolvedmove = breakTie((conflictingDestinations).getStationNum());
+//make the breaktie move the current move
+ detectiveDestinations[i] = resolvedmove;
+} 
+else {
+ detectiveDestinations[i] = optimal;
+}
+}
+
+   
+for (int k = 0; k < detectives.size(); k++) {
+    Player& detective = detectives[k];
+    int destinationNum = detectiveDestinations[k];
+	
+	//make sure the station is a valid destination 
+	if (destinationNum >= 1 && destinationNum <= board.size()){
+    Station destination = board[destinationNum - 1]; 
+    detective.setCurrentStation(destination);
 	}
+    }
+
+}
+
 	
 	//Returns a vector<int> which is the path (station #s in order) to the nearest subway station that the detective can reach in 'moves' number of moves
 	//'moves' is the number of moves before mr. x shows up
