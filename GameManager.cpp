@@ -194,28 +194,12 @@
 			for (auto& detective : detectives) {
 				cout << "Detective #" << detectiveNum << " at station " << detective.getCurrentStation()->getStationNum() << " is moving..." << endl;
 
-				// Show available moves for current detective
-				vector<int> possibleMoves = detective.getCurrentStation()->getAllAdjacentStations(getDetectiveLocations(detectives), mrX.getTaxiTickets(),mrX.getBusTickets(), mrX.getSubwayTickets());
-				cout << "Detective #" << detectiveNum << " is at station " << detective.getCurrentStation()->getStationNum() << ". Available moves: ";
-				for (int stationNum : possibleMoves) {
-					cout << stationNum << " ";
-				}
-				cout << endl;
+				// Detective chooses optimal solution based on shortest path to potential Mr X location
+				Station nextStation = chooseOptimalDetectiveMove(detective, possibleMrXLocations, board);
+				vector<int> transportTypes = detective.getCurrentStation()->getAllTransportTypesTo(nextStation);
 
-				// Ask for the transport type and destination for detective
-				int chosenStation, chosenTransport;
-				cout << "Enter the destination station number: ";
-				cin >> chosenStation;
-				cout << "Enter the transport type (1: Taxi, 2: Bus, 3: Subway): ";
-				cin >> chosenTransport;
-
-				// Move detective if possible
-				if (detective.canMove(chosenTransport)) {
-					detective.move(&board[chosenStation - 1], chosenTransport, mrX);
-					cout << "Detective #" << detectiveNum << " moved to station " << detective.getCurrentStation()->getStationNum() << endl;
-				} else {
-					cout << "Invalid move. Detective cannot move with this transport type." << endl;
-				}
+				// Just choose the first transport type for now
+				detective.move(nextStation, transportTypes[0], mrX);
 
 				detectiveNum++;
 			}

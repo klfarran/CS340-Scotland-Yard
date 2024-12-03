@@ -4,7 +4,6 @@
 	#include <limits.h>
 	#include "Station.h"
 	#include "Edge.h"
-	#include "GameManager.h"
 	#include <algorithm>
 	
 	using namespace std;
@@ -225,11 +224,6 @@ for (int k = 0; k < detectives.size(); k++) {
 		//Return all stations a detective can reach in a certain number of moves, like pathToClosestSubway but more general
 		vector<Station> stations;
 		return stations;
-	}
-	
-	int DetectiveStrategy::distanceToPotentialMrX() {
-		//For each detective, find distances to potential mr. x locations based off the tree of possible mr. x moves for greedy strategy
-		return 0;
 	}
 	
 	int DetectiveStrategy::chooseBestTicket(Player detective, vector<int> availableTransports) {
