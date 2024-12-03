@@ -1,6 +1,7 @@
 
 	#include "DetectiveStrategy.h"
-	#include <limits.h> //for INT_MAX
+	#include <limits> //for INT_MAX
+	#include <limits.h>
 	#include "Station.h"
 	#include "Edge.h"
 	#include "GameManager.h"
@@ -132,7 +133,8 @@
 				shortestPathLen = curPathLen;
 				closestStation = curPotStation;
 			}
-		}		
+		}
+			return *closestStation;
 	}
 	
 	//If multiple detectives have the same choices for where to go, choose a destination 
