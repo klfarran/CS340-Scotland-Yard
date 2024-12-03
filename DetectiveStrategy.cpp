@@ -122,7 +122,6 @@
 		int shortestPathLen = INT_MAX; //current shortest path found
 		int curPathLen;  //current path we're working with 
 		vector<int> curPath;
-		Station* closestStation; 
 		Station* detectiveStation = detective.getCurrentStation();
 	
 		for(TreeNode curPotentialLoc : locations) {
@@ -131,10 +130,9 @@
 			curPathLen = curPath.size();
 			if(curPathLen < shortestPathLen) {
 				shortestPathLen = curPathLen;
-				closestStation = curPotStation;
 			}
 		}
-			return *closestStation;
+			return board[curPath[0]-1]; 
 	}
 	
 	//If multiple detectives have the same choices for where to go, choose a destination 
