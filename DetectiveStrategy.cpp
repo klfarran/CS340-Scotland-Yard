@@ -1,5 +1,6 @@
 
 	#include "DetectiveStrategy.h"
+	#include <limits.h> //for INT_MAX
 	#include "Station.h"
 	#include "Edge.h"
 	#include "GameManager.h"
@@ -110,16 +111,33 @@
 		return shortestPath;
 	}
 	
-	Station DetectiveStrategy::chooseOptimalDetectiveMove(Player detective, TreeNode potentialMrXLocations) {
-		//Uses shortestPath and loops through mr. x’s potential locations and 
-		//selects the location with the minimal distance for each detective
-		vector<Edge> edges;
-		return Station(0, edges);
+	//Uses shortestPath and loops through mr. x’s potential locations and 
+	//selects the location with the minimal distance for the detective 'detective'
+	Station DetectiveStrategy::chooseOptimalDetectiveMove(Player detective, TreeNode potentialMrXLocations, vector<Station> board) {
+		//leaves of the tree of potential mrX locations are the current potential mrx locations- get them 
+		vector<TreeNode> locations; 
+		potentialMrXLocations.getLeaves(potentialMrXLocations, locations); //locations is updated by reference to contain the leaves 
+		
+		int shortestPathLen = INT_MAX; //current shortest path found
+		int curPathLen;  //current path we're working with 
+		vector<int> curPath;
+		Station* closestStation; 
+		Station* detectiveStation = detective.getCurrentStation();
+	
+		for(TreeNode curPotentialLoc : locations) {
+			Station* curPotStation = curPotentialLoc.getStation();
+			curPath = this->shortestPath(detective, *detectiveStation, *curPotStation, board);
+			curPathLen = curPath.size();
+			if(curPathLen < shortestPathLen) {
+				shortestPathLen = curPathLen;
+				closestStation = curPotStation;
+			}
+		}		
 	}
 	
-	Station DetectiveStrategy::breakTie(vector<Station> destinations) {
-		//If multiple detectives have the same choices for where to go, choose a destination 
-		//station that benefits the whole team by spreading detectives to cover more of mr. x’s potential moves
+	//If multiple detectives have the same choices for where to go, choose a destination 
+	//station that benefits the whole team by spreading detectives to cover more of mr. x’s potential moves
+	Station DetectiveStrategy::breakTie(vector<Station> destinations) {		
 		vector<Edge> edges;
 		return Station(0, edges);
 	}
@@ -128,22 +146,46 @@
 		//Execute moves based off of optimal move and tie breaking
 	}
 	
-	vector<Edge> DetectiveStrategy::pathToClosestSubway(Station start, int moves) {
-		//Returns a path to the nearest subway station that the detective can reach in x 
-		//number of moves, x being the number of moves before mr. x shows up
-
+	//Returns a vector<int> which is the path (station #s in order) to the nearest subway station that the detective can reach in 'moves' number of moves
+	//'moves' is the number of moves before mr. x shows up
+	//'start' is the current station of the detective 
+	//TO-DO: in GameManager, need to create function getSubwayStations(vector<Station> board) to be able to pass the subway stations to this function 
+	//subway stations: 1, 46, 74, 93, 79, 111, 163, 153, 140, 185, 159, 13, 67, 89
+	vector<int> DetectiveStrategy::pathToClosestSubway(Player detective, int moves, vector<Station> subwayStations, vector<Station> board) {
+				
+			int shortestPathLen = INT_MAX;	
+			int curPathLen;
+			vector<int> shortestPath;
+			Station* detectiveStation = detective.getCurrentStation();
+			
+			//call shortestPath between start and each subway station to see if any subway station is reachable in under 'moves' # of moves 
+			for(Station curSubStation : subwayStations) {
+				shortestPath = this->shortestPath(detective, *detectiveStation, curSubStation, board);
+				curPathLen = shortestPath.size();
+				if(curPathLen < shortestPathLen && curPathLen < moves) //path is shorter than current shortest path AND less than 'moves' # of moves
+					shortestPathLen = curPathLen;
+			}			
+		
+		if(shortestPathLen == INT_MAX) { //no path to any subway station is < moves, return empty vector	
+			vector<int> emptyPath;
+			return emptyPath;
+		} else //we have a real shortestPath, return it
+			return shortestPath;
 	}
 	
 	vector<Station> DetectiveStrategy::getReachableStations(Station start, int movesRemaining) {
 		//Return all stations a detective can reach in a certain number of moves, like pathToClosestSubway but more general
-
+		vector<Station> stations;
+		return stations;
 	}
 	
 	int DetectiveStrategy::distanceToPotentialMrX() {
 		//For each detective, find distances to potential mr. x locations based off the tree of possible mr. x moves for greedy strategy
+		return 0;
 	}
 	
 	int DetectiveStrategy::chooseBestTicket(Player detective, vector<int> availableTransports) {
 		//Returns highest priority transport types to a given station, like maybe we want to use buses first and save taxis and save subways
+		return 0;
 	}
 	
