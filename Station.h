@@ -19,9 +19,10 @@ class Station {
 		void displayStationInfo();
 		vector<Edge> getEdges();
 		void setEdges(vector<Edge> inEdges);
-		vector<int> getAllAdjacentStations(vector<int> locations);
+		vector<int> getAllAdjacentStations(vector<int> locations, int taxiTickets, int busTickets, int undTickets);
 		vector<int> getNextStations(TransportType T);
 		bool equals(Station other);
+		vector<int> getAllTransportTypesTo(Station adjacent) const;
 	
 	private: 
 		int stationNumber;

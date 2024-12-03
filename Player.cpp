@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "Station.h"
 
 // Constructor
 Player::Player(bool isMrX, Station* startStation) {
@@ -109,20 +110,32 @@ bool Player::canMove(int transportType) const {
     }
 }
 
-// Move the player and deduct tickets
-void Player::move(Station* destination, int transportType) {
+// Move the player and deduct tickets, add used ticket to Mr. X's inventory if player is a detective
+void Player::move(Station* destination, int transportType, Player& mrX) {
     if (canMove(transportType)) {
         currentStation = destination;
 
-        // Deduct tickets based on transport type
+        // Deduct tickets based on transport type and add the used ticket to Mr. X's inventory
         switch (transportType) {
-            case 1: taxiTickets--; break;
-            case 2: busTickets--; break;
-            case 3: subwayTickets--; break;
-            case 4: blackTickets--; break;
+            case 1:
+                taxiTickets--;
+                mrX.taxiTickets++;
+                break;
+            case 2:
+                busTickets--;
+                mrX.busTickets++;
+                break;
+            case 3:
+                subwayTickets--;
+                mrX.subwayTickets++;
+                break;
+            case 4:
+                blackTickets--;
+                break;
         }
     }
 }
+
 
 // Mr. X double moves
 void Player::moveWithDouble(Station* destination1, Station* destination2) {

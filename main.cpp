@@ -5,10 +5,12 @@
 #include <iostream>
 #include <cstdlib>
 #include <vector>
+#include <ctime>
 
 #include "Edge.h"
 #include "Station.h"
 #include "GameManager.h"
+#include "DetectiveStrategy.h"
 
 using namespace std;
 
@@ -19,6 +21,8 @@ using namespace std;
 			if(drawn[i].equals(chosen))
 				return true;
 		}
+		
+		
 		return false;
 	}
 	
@@ -28,6 +32,7 @@ using namespace std;
 			int random = rand() %18; //random number between 0 and 17
 			Station chosen = possibleStarts[random];
 		while(contains(drawn, chosen)) {
+			srand(time(0)); //seed random number generator using current time(required to not get the same sequence of random numbers)
 			random = rand() %18; //new random number between 0 and 17
 			chosen = possibleStarts[random]; //new random station
 		   }
@@ -80,29 +85,15 @@ int main() {
 	possibleStarts.push_back(board[174-1]);
 	possibleStarts.push_back(board[197-1]);
 	possibleStarts.push_back(board[198-1]);
-	
-	cout << "Press any key to start the game" << endl;
-	int blah;
-	cin >> blah;
 
 
 	vector<Station> drawn; //keeps track of the start stations which already have players placed on them/ have already been 'drawn'/ chosen
 							//so that we don't start another player at the same station as someone else 
 	
-
 	//initialize mrX
 	Station xStartStation = draw(possibleStarts, drawn); //get startStation from "drawing a card"
 	Player mrX(true, &xStartStation);
 	
-	//set all of mrX's tickets 
-	//because mrX 'gets' the used tickets of the detectives, we can either initialize these to be 'infinite' (super large numbers) or
-	//in the game loop, when a player uses a ticket, we can set mrX's tickets again (adding the used ticket from the player)
-	mrX.setTaxiTickets(4);
-	mrX.setBusTickets(3);
-	mrX.setSubwayTickets(3);
-	mrX.setDoubleMoves(2);
-	mrX.setBlackTickets(5); //number of black tickets for mrX = number of detectives there are
-	//no such thing as boat tickets- need to change player class to reflect 
 	
 	//initialize detectives (there are 5)
 	vector<Player> detectives;
@@ -127,12 +118,6 @@ int main() {
 	Player detective5(false, &d5StartStation);
 	detectives.push_back(detective5);
 	
-	//set all of the tickets for the detectives with the appropriate starting amounts 
-	for(int i = 0; i < detectives.size(); i++) {
-		detectives[i].setTaxiTickets(10);
-		detectives[i].setBusTickets(8);
-		detectives[i].setSubwayTickets(4);
-	}
 	
 	//start the game 
 	gameManager.gameLoop(mrX, detectives, board);
