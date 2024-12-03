@@ -4,7 +4,6 @@
 	#include <limits.h>
 	#include "Station.h"
 	#include "Edge.h"
-	#include "GameManager.h"
 	#include <algorithm>
 	
 	using namespace std;
