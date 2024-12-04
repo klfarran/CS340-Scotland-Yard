@@ -110,7 +110,6 @@
 		TreeNode possibleMrXLocations;
 
 		//pass detectives to detective strategy class to initialize the detective strategy object 
-		//possible future upgrade- DetectiveStrategy initializes detectives (with all tickets and such) rather than main
 		DetectiveStrategy detectiveStrategy(detectives);
 	
 
@@ -195,11 +194,11 @@
 				cout << "Detective #" << detectiveNum << " at station " << detective.getCurrentStation()->getStationNum() << " is moving..." << endl;
 
 				// Detective chooses optimal solution based on shortest path to potential Mr X location
-				Station nextStation = chooseOptimalDetectiveMove(detective, possibleMrXLocations, board);
+				Station nextStation = detectiveStrategy.chooseOptimalDetectiveMove(detective, possibleMrXLocations, board);
 				vector<int> transportTypes = detective.getCurrentStation()->getAllTransportTypesTo(nextStation);
 
 				// Just choose the first transport type for now
-				detective.move(nextStation, transportTypes[0], mrX);
+				detective.move(&nextStation, transportTypes[0], mrX);
 
 				detectiveNum++;
 			}
