@@ -113,25 +113,37 @@
 	
 	//Uses shortestPath and loops through mr. x’s potential locations and 
 	//selects the location with the minimal distance for the detective 'detective'
-	Station DetectiveStrategy::chooseOptimalDetectiveMove(Player detective, TreeNode potentialMrXLocations, vector<Station> board) {
+	Station DetectiveStrategy::chooseOptimalDetectiveMove(Player detective, vector<int> detectiveLocations, TreeNode potentialMrXLocations, vector<Station> board) {
 		//leaves of the tree of potential mrX locations are the current potential mrx locations- get them 
 		vector<TreeNode> locations; 
 		potentialMrXLocations.getLeaves(potentialMrXLocations, locations); //locations is updated by reference to contain the leaves 
 		
-		int shortestPathLen = INT_MAX; //current shortest path found
-		int curPathLen;  //current path we're working with 
-		vector<int> curPath;
-		Station* detectiveStation = detective.getCurrentStation();
-	
-		for(TreeNode curPotentialLoc : locations) {
-			Station* curPotStation = curPotentialLoc.getStation();
-			curPath = this->shortestPath(detective, *detectiveStation, *curPotStation, board);
-			curPathLen = curPath.size();
-			if(curPathLen < shortestPathLen) {
-				shortestPathLen = curPathLen;
+		if(locations[0].getStation().getStationNum() == -1) {//its round 1 or 2, and our tree is "empty" 
+			//move to a spot on the board that is optimal for being able to move 'anywhere' 
+			//this Station has to be a valid move from where the detective is, so get all valid next stations: 
+			vector<int> adjacents = detective.getCurrentStation()->getAllAdjacentStations(detectiveLocations, detective.getTaxiTickets(), detective.getBusTickets(), detective.getSubwayTickets());
+			cout << "adjacents: " ;
+			for(int i = 0; i < adjacents.size(); i++) {
+				cout << adjacents[i] << " ";
 			}
+			cout << endl;
+			return board[adjacents[0]-1];
 		}
-			return board[curPath[0]-1]; 
+		  else { //carry on normally 
+			int shortestPathLen = INT_MAX; //current shortest path found
+			int curPathLen;  //current path we're working with 
+			vector<int> curPath;
+			Station* detectiveStation = detective.getCurrentStation();
+		
+			for(TreeNode curPotentialLoc : locations) {
+				curPath = this->shortestPath(detective, *detectiveStation, curPotentialLoc.getStation(), board);
+				curPathLen = curPath.size();
+				if(curPathLen < shortestPathLen) {
+					shortestPathLen = curPathLen;
+				}
+			}
+				return board[curPath[0]-1]; 
+		}
 	}
 	
 	//If multiple detectives have the same choices for where to go, choose a destination 
@@ -145,6 +157,7 @@
 //this needs the tree node vetor to show the potential X locations. 
 //the stations that rep the board. 
 void DetectiveStrategy::detectiveGreedyMove(vector<TreeNode> potentialMrXLocations, vector<Station> board) {
+	/*
 //need to hold all of the stations that a detective goes to
 vector<int> detectiveDestinations(detectives.size());
 	
@@ -189,7 +202,7 @@ for (int k = 0; k < detectives.size(); k++) {
     detective.setCurrentStation(destination);
 	}
     }
-
+*/
 }
 
 	
