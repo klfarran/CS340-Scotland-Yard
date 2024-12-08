@@ -122,11 +122,7 @@
 			//move to a spot on the board that is optimal for being able to move 'anywhere' 
 			//this Station has to be a valid move from where the detective is, so get all valid next stations: 
 			vector<int> adjacents = detective.getCurrentStation()->getAllAdjacentStations(detectiveLocations, detective.getTaxiTickets(), detective.getBusTickets(), detective.getSubwayTickets());
-			cout << "adjacents: " ;
-			for(int i = 0; i < adjacents.size(); i++) {
-				cout << adjacents[i] << " ";
-			}
-			cout << endl;
+			
 			return board[adjacents[0]-1];
 		}
 		  else { //carry on normally 
