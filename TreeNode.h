@@ -11,27 +11,28 @@ using namespace std;
 		public:
 		
 		//Constructor
-		TreeNode(Station* station, vector<TreeNode> children);
+		TreeNode(Station station, vector<TreeNode> children);
 		TreeNode();
 		
 		//Getters
 		vector<TreeNode> getChildren() const;
 		int getNumChildren() const;
 		TreeNode getChild(int stationNumber) const;
-		Station* getStation() const;
+		Station getStation() const;
 		void getLeaves(TreeNode root, vector<TreeNode>& leaves) const;
 		
 		//Setters
 		void setChildren(vector<TreeNode> inChildren);
 		void setChild(int pos, TreeNode T);	
-		void setStation(Station* newStation);
+		void setStation(Station newStation);
 
 		//Other Functions
 		bool isLeaf();
+		void printNode();
 		
-
+ 
 	private:
-		Station* station; 
+		Station station; 
 		vector<TreeNode> children;
 	};
 

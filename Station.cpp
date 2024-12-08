@@ -8,10 +8,18 @@
 	using namespace std;
 
 
-	//contructor
+	//contructors
 	Station::Station(int inStationNumber, vector<Edge> inEdges){
 		stationNumber = inStationNumber;
 		edges = inEdges;
+	}
+	
+	
+	
+	Station::Station() {
+		// Default values
+		stationNumber = -1;
+		edges = {};
 	}
 
 	//function to return the number of the current station
@@ -37,14 +45,17 @@
 
 
 	//returns a vector of ints which are the station numbers of the stations which are adjacent to the station object the 
-		//function is called on, regardless of transportation method 
+		//function is called on
 	vector<int>Station::getAllAdjacentStations(vector<int> locations, int taxiTickets, int busTickets, int undTickets) {
 		vector<int> adjacents;
 		bool isOpen;
+
+		//for each edge of this station (that connects to a neighbor station)
 		for(int i = 0; i < edges.size(); i++) {
 			isOpen = true; //for each destination station, we start by assuming that its "open" (there are no detectives already there)
+			//for each station that a detective currently occupies 
 			for(int j = 0; j < locations.size(); j++) {
-				if(locations[j] == (edges[i].getPointB())) //our (current) destination station is the same as some station that a detective is at
+				if(locations[j] == (edges[i].getPointB())) //if there is a detective at this possible destination station, its not "open" to be moved to 
 					isOpen = false; //so this station is not "open"
 			}
 			
@@ -55,7 +66,7 @@
 					adjacents.push_back(edges[i].getPointB()); //destination station from our station cur
 			}
 		}
-		
+
 	   return adjacents;
 	}
 

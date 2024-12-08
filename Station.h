@@ -13,6 +13,7 @@ class Station {
 	public:
 		//contructor
 		Station(int inStationNumber, vector<Edge> inEdges);
+		Station();
 		
 		//methods
 		int getStationNum();
