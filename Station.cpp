@@ -35,11 +35,11 @@
 		cout << endl;
 	}
 	
-	vector<Edge> Station::getEdges() {
+	vector<Edge> Station::getEdges() const {
 		return edges;
 	}
 	
-	int Station::getNumEdges() {
+	int Station::getNumEdges() const {
 		return edges.size();
 	}
 	
@@ -95,7 +95,7 @@
 	// Returns vector of all transport types between two stations
 	vector<int> Station::getAllTransportTypesTo(Station adjacent) const {
 		vector<int> transportTypes;
-		vector<Edge> edges = adjacent.getEdges();
+		vector<Edge> edges = getEdges();
 		for (Edge edge : edges) {
 			if (edge.getPointB() == adjacent.getStationNum()) {
 				transportTypes.push_back(edge.getTransport());

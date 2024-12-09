@@ -122,7 +122,6 @@
 			//move to a spot on the board that is optimal for being able to move 'anywhere' 
 			//this Station has to be a valid move from where the detective is, so get all valid next stations: 
 			vector<int> adjacents = detective.getCurrentStation()->getAllAdjacentStations(detectiveLocations, detective.getTaxiTickets(), detective.getBusTickets(), detective.getSubwayTickets());
-			
 			return optimalBlindMove(adjacents, board);
 		}
 		  else { //carry on normally 
@@ -243,7 +242,14 @@ for (int k = 0; k < detectives.size(); k++) {
 	//takes a vector of station numbers which are the currently reachable stations of the current detective and 
 	//returns the station which has the most edges to other stations (has the most access to other stations)
 	Station DetectiveStrategy::optimalBlindMove(vector<int> adjacents, vector<Station> board) {
-		
+		//for debugging, delete later: 
+		/*
+		cout << "choosing optimal blind move. adjacent stations: " ;
+		for (int k = 0; k < adjacents.size(); k++){
+			cout << adjacents[k] << " ";
+		}
+		cout << endl;
+		*/
 		//start by setting optimal to be the first adjacent station
 		Station optimal = board[adjacents[0]-1];
 		
