@@ -43,24 +43,10 @@ using namespace std;
 
 
 int main() {
-
-
-    //Create an edge that can be traversed by all transport types
-    //Edge edge2(8, 19, TAXI);
- 
-	//edge1.display();
-    //edge2.display();
 	
 	//initialize the game board
 	GameManager gameManager;
 	vector<Station> board = gameManager.initializeBoard();
-	
-	//print out the game board if necessary for debugging: 
-	/*
-	for(int i = 0; i < board.size(); i++) {
-		board[i].displayStationInfo();
-	}
-	*/
 	
 	//initialize all possible start stations
 	//these numbers are from the 18 starting position cards from the game 
