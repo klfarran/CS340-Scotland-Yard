@@ -107,12 +107,11 @@
 
 	void GameManager::gameLoop(Player& mrX, vector<Player>& detectives, vector<Station>& board) {
     	bool gameOver = false;
-		TreeNode possibleMrXLocations;
+		TreeNode possibleMrXLocations = TreeNode();
 
 		//pass detectives to detective strategy class to initialize the detective strategy object 
 		DetectiveStrategy detectiveStrategy(detectives);
 	
-
     	// Start the game loop
     	while (!gameOver) {
         
@@ -145,13 +144,33 @@
 				int firstStation, firstTransport;
 				cout << "Enter the first destination station number: ";
 				cin >> firstStation;
-				cout << "Enter the second transport type (1: Taxi, 2: Bus, 3: Subway, 4: Black Ticket): ";
+				
+				//print available transportation methods for user 
+				vector<int> availTransportTypes = mrX.getCurrentStation()->getAllTransportTypesTo(board[firstStation-1]);
+				cout << "Available modes of transportation: ";
+				printAvailalbeTransportTypes(availTransportTypes);
+				
+				cout << "Enter the first transport type (1: Taxi, 2: Bus, 3: Subway, 4: Black Ticket): ";
 				cin >> firstTransport;
 
+				//show possible destinations for second half of double move: 
+				vector<int> possibleSecondMoves = board[firstStation-1].getAllAdjacentStations(getDetectiveLocations(detectives), mrX.getTaxiTickets(),mrX.getBusTickets(), mrX.getSubwayTickets());
+				cout << "Mr. X's location is hidden. Available moves: ";
+					for (int stationNum : possibleSecondMoves) {
+						cout << stationNum << " ";
+					}
+				cout << endl;		
+				
 				// Ask for the transport type and destination for Mr. X's double move
 				int doubleStation, doubleTransport;
-				cout << "Enter the first destination station number: ";
+				cout << "Enter the second destination station number: ";
 				cin >> doubleStation;
+				
+				//print available transportation methods for user 
+				vector<int> secondAvailTransportTypes = board[firstStation-1].getAllTransportTypesTo(board[doubleStation-1]);
+				cout << "Available modes of transportation: ";
+				printAvailalbeTransportTypes(secondAvailTransportTypes);
+				
 				cout << "Enter the second transport type (1: Taxi, 2: Bus, 3: Subway, 4: Black Ticket): ";
 				cin >> doubleTransport;	
 
@@ -168,7 +187,13 @@
 				int chosenStation, chosenTransport;
 				cout << "Enter the destination station number: ";
 				cin >> chosenStation;
-				cout << "Enter the transport type (1: Taxi, 2: Bus, 3: Subway, 4: Black Ticket): ";
+				
+				//print available transportation methods for user 
+				vector<int> availTransportTypes = mrX.getCurrentStation()->getAllTransportTypesTo(board[chosenStation-1]);
+				cout << "Available modes of transportation: ";
+				printAvailalbeTransportTypes(availTransportTypes);
+				
+				cout << "Enter the desired transport type (1: Taxi, 2: Bus, 3: Subway, 4: Black Ticket): ";
 				cin >> chosenTransport;
 
 				// Move Mr. X if possible
@@ -177,8 +202,8 @@
 					cout << "Mr. X moved to station " << mrX.getCurrentStation()->getStationNum() << endl;
 					
 					if(round == 3 || round == 8 || round == 13 || round == 18) //or first half of a double move,...
-						possibleMrXLocations = Build_Tree(mrX.getCurrentStation(), board, mrX, detectives);	
-					else
+						possibleMrXLocations = Build_Tree(*mrX.getCurrentStation(), board, mrX, detectives);	
+					else 
 						AddNextPossibleMrXLocations(possibleMrXLocations, board, mrX, detectives);
 					
 				} else {
@@ -194,9 +219,21 @@
 				cout << "Detective #" << detectiveNum << " at station " << detective.getCurrentStation()->getStationNum() << " is moving..." << endl;
 
 				// Detective chooses optimal solution based on shortest path to potential Mr X location
-				Station nextStation = detectiveStrategy.chooseOptimalDetectiveMove(detective, possibleMrXLocations, board);
+				Station nextStation = detectiveStrategy.chooseOptimalDetectiveMove(detective, getDetectiveLocations(detectives), possibleMrXLocations, board);
+				
 				vector<int> transportTypes = detective.getCurrentStation()->getAllTransportTypesTo(nextStation);
-
+				
+				//for debugging, delete later 
+				/*
+				cout << "destination station: " <<nextStation.getStationNum() << " " << endl; 
+				
+				
+				cout << "transport types: ";
+				for (int k = 0; k < transportTypes.size(); k++) {
+					cout << transportTypes[k] << " ";
+				}
+				cout << endl;
+				*/
 				// Just choose the first transport type for now
 				detective.move(&nextStation, transportTypes[0], mrX);
 
@@ -228,13 +265,13 @@
 		return locations;
 	}
 	
-	TreeNode GameManager::Build_Tree(Station* station, vector<Station>& board, Player& mrX, vector<Player> detectives) {
+	TreeNode GameManager::Build_Tree(Station station, vector<Station>& board, Player& mrX, vector<Player> detectives) {
 		vector<TreeNode> children;
 		vector<TreeNode> childrensChildren = {};
 	
-		vector<int> adjacentStationNumbers = station->getAllAdjacentStations(getDetectiveLocations(detectives), mrX.getTaxiTickets(), mrX.getBusTickets(), mrX.getSubwayTickets());
+		vector<int> adjacentStationNumbers = station.getAllAdjacentStations(getDetectiveLocations(detectives), mrX.getTaxiTickets(), mrX.getBusTickets(), mrX.getSubwayTickets());
 			for(int i = 0; i < adjacentStationNumbers.size(); i++) {
-				TreeNode child(&board[adjacentStationNumbers[i-1]], childrensChildren); //remember board starts at 0, station numbers start at 1
+				TreeNode child(board[adjacentStationNumbers[i-1]], childrensChildren); //remember board starts at 0, station numbers start at 1
 				children.push_back(child);
 			}
 		TreeNode root(station, children);
@@ -247,17 +284,56 @@
 		//go to every leaf of the tree and add all possible next stations as children of each 
 		vector<TreeNode> leaves; 
 		vector<TreeNode> childrensChildren = {};
+
 		possibleMrXLocations.getLeaves(possibleMrXLocations, leaves); //updates leaves vector to contain all leaves from tree rooted at possibleMrXLocations
 		
-		for(TreeNode leaf : leaves) {
-			vector<TreeNode> children;
-			vector<int> adjacentStationNumbers = leaf.getStation()->getAllAdjacentStations(getDetectiveLocations(detectives), mrX.getTaxiTickets(), mrX.getBusTickets(), mrX.getSubwayTickets());
-			for(int i = 0; i < adjacentStationNumbers.size(); i++) {
-				TreeNode child(&board[adjacentStationNumbers[i-1]], childrensChildren); //remember board starts at 0, station numbers start at 1
-				children.push_back(child);
-			}	
-		    leaf.setChildren(children);
-		}
+		if(leaves[0].getStation().getStationNum() != -1) { //its not round 1 or 2, so build next level of tree given mrX's possible location(s)
+			for(TreeNode leaf : leaves) {
+				vector<TreeNode> children;
+				vector<int> adjacentStationNumbers = leaf.getStation().getAllAdjacentStations(getDetectiveLocations(detectives), mrX.getTaxiTickets(), mrX.getBusTickets(), mrX.getSubwayTickets());
+				for(int i = 0; i < adjacentStationNumbers.size(); i++) {
+					TreeNode child(board[adjacentStationNumbers[i-1]], childrensChildren); //remember board starts at 0, station numbers start at 1
+					children.push_back(child);
+				}	
+				leaf.setChildren(children);
+			 }
+	    }
 	}
 
+	//prints out in one line the available transport types according to the transport types found in 
+	//incoming vector availTransportTypes
+	void GameManager::printAvailalbeTransportTypes(vector<int> availTransportTypes) {
+		string answer = "";
+		bool hasTaxi = false; 
+		bool hasBus = false;
+		bool hasUnd = false;
+		bool hasBlack = false; 
+		
+		for(int k = 0; k < availTransportTypes.size(); k++) {
+				if(availTransportTypes[k] == 1)
+					hasTaxi = true;
+				else if(availTransportTypes[k] == 2)
+					hasBus = true;
+				else if(availTransportTypes[k] == 4)
+					hasUnd = true; 
+				else if(availTransportTypes[k] == 8)
+					hasBlack = true;
+			}
+			
+		if(hasTaxi)
+			answer += "Taxi ";
+		if(hasBus)
+			answer += "Bus ";
+		if(hasUnd)
+			answer += "Underground ";
+		if(hasBlack)
+			answer += "Black ";
+		
+		//add commas in the answer 
+		for (int k = 0; k < answer.length() -1; k++) { //dont want to replace the last space with a comma 
+			if (answer.at(k) == ' ') 
+				answer.insert(k, ", ");
+		}
+		cout << answer << endl;
+	}
 
