@@ -194,8 +194,8 @@
 
 				// Detective chooses optimal solution based on shortest path to potential Mr X location
 				Station nextStation = detectiveStrategy.chooseOptimalDetectiveMove(detective, getDetectiveLocations(detectives), possibleMrXLocations, board);
+
 				vector<int> transportTypes = detective.getCurrentStation()->getAllTransportTypesTo(nextStation);
-				cout << nextStation.getStationNum() << endl;
 				// Just choose the first transport type for now
 				detective.move(&nextStation, transportTypes[0], mrX);
 

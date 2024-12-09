@@ -26,6 +26,7 @@ public:
 	vector<Station> getReachableStations(Station start, int movesRemaining);
 	int distanceToPotentialMrX();
 	int chooseBestTicket(Player detective, vector<int> availableTransports);
+	Station optimalBlindMove(vector<int> adjacents, vector<Station> board);
 	
 };
 

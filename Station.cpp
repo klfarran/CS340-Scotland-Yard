@@ -39,6 +39,10 @@
 		return edges;
 	}
 	
+	int Station::getNumEdges() {
+		return edges.size();
+	}
+	
 	void Station::setEdges(vector<Edge> inEdges) {
 		edges = inEdges;	
 	}

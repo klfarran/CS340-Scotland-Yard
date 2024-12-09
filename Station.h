@@ -19,6 +19,7 @@ class Station {
 		int getStationNum();
 		void displayStationInfo();
 		vector<Edge> getEdges();
+		int getNumEdges();
 		void setEdges(vector<Edge> inEdges);
 		vector<int> getAllAdjacentStations(vector<int> locations, int taxiTickets, int busTickets, int undTickets);
 		vector<int> getNextStations(TransportType T);
