@@ -111,7 +111,7 @@
 
 		//pass detectives to detective strategy class to initialize the detective strategy object 
 		DetectiveStrategy detectiveStrategy(detectives);
-	
+
     	// Start the game loop
     	while (!gameOver) {
         
@@ -182,7 +182,7 @@
 					cout << "Invalid move." << endl;
 				}							
 			}
-			else{
+			else if (useDoubleMove == 'n'){
 				// Ask for the transport type and destination for Mr. X
 				int chosenStation, chosenTransport;
 				cout << "Enter the destination station number: ";
