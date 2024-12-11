@@ -247,17 +247,9 @@
 		return allDetectiveStations;
 	}
 
-	void performDFS(int startStation, int moves, vector<Station>& board, int taxiTix, int busTix, int subwayTix,
-		vector<Station>& reachableStations) {
-		
-		// create the vector of visited stations (false for all stations so they are makred unvisited befoe the helper is called)
-		vector<bool> visited(board.size(), false);
+	
 
-		//  helper function starting at the start station
-		dfsHelper(startStation, moves, visited, reachableStations, board, taxiTix, busTix, subwayTix);
-	}
-
-	void dfsHelper(int currentStationNum, int movesLeft, vector<bool>& visited, vector<Station>& reachableStations,
+	void DetectiveStrategy::dfsHelper(int currentStationNum, int movesLeft, vector<bool>& visited, vector<Station>& reachableStations,
                vector<Station>& board, int& taxiTix, int& busTix, int& subwayTix) {
 		//mark current staion as visted and add it to reach vector
 		visited[currentStationNum - 1] = true;
@@ -313,6 +305,16 @@
 				}
         	}
     	}
+	}
+	
+	void DetectiveStrategy::performDFS(int startStation, int moves, vector<Station>& board, int taxiTix, int busTix, int subwayTix,
+		vector<Station>& reachableStations) {
+		
+		// create the vector of visited stations (false for all stations so they are makred unvisited befoe the helper is called)
+		vector<bool> visited(board.size(), false);
+
+		//  helper function starting at the start station
+		dfsHelper(startStation, moves, visited, reachableStations, board, taxiTix, busTix, subwayTix);
 	}
 	
 	int DetectiveStrategy::chooseBestTicket(Player detective, vector<int> availableTransports) {
