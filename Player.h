@@ -1,7 +1,6 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "Station.h"
 
 class Player {
 private:
@@ -11,12 +10,11 @@ private:
     int subwayTickets;
     int blackTickets;  // Only Mr. X
     int doubleMoves;   // Only Mr. X
-    int boatTickets;   // Only Mr. X
-    Station* currentStation;  // Current location of the player
+    int currentStation;  // Current station number of the location of the player
 
 public:
     // Constructor
-    Player(bool isMrX, Station* startStation);
+    Player(bool isMrX, int startStation);
 
     // Getters
     bool getIsMrX() const;
@@ -25,8 +23,7 @@ public:
     int getSubwayTickets() const;
     int getBlackTickets() const;
     int getDoubleMoves() const;
-    int getBoatTickets() const;
-    Station* getCurrentStation() const;
+    int getCurrentStation() const;
 
     // Setters
     void setTaxiTickets(int tickets);
@@ -34,13 +31,12 @@ public:
     void setSubwayTickets(int tickets);
     void setBlackTickets(int tickets);
     void setDoubleMoves(int moves);
-    void setBoatTickets(int tickets);
-    void setCurrentStation(Station* station);
+    void setCurrentStation(int station);
 
     // Methods
     bool canMove(int transportType) const;
-    void move(Station* destination, int transportType, Player& mrX);
-    void moveWithDouble(Station* destination1, Station* destination2);
+    void move(int destination, int transportType, Player& mrX);
+    void moveWithDouble(int destination1, int destination2);
 };
 
 #endif

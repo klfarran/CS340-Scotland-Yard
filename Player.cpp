@@ -1,8 +1,7 @@
 #include "Player.h"
-#include "Station.h"
 
 // Constructor
-Player::Player(bool isMrX, Station* startStation) {
+Player::Player(bool isMrX, int startStation) {
     this->isMrX = isMrX;
     
     // Assign taxi tickets
@@ -70,7 +69,7 @@ int Player::getDoubleMoves() const {
     return doubleMoves; 
 }
 
-Station* Player::getCurrentStation() const { 
+int Player::getCurrentStation() const { 
     return currentStation; 
 }
 
@@ -95,7 +94,7 @@ void Player::setDoubleMoves(int moves) {
     doubleMoves = moves; 
 }
 
-void Player::setCurrentStation(Station* station) { 
+void Player::setCurrentStation(int station) { 
     currentStation = station; 
 }
 
@@ -111,7 +110,7 @@ bool Player::canMove(int transportType) const {
 }
 
 // Move the player and deduct tickets, add used ticket to Mr. X's inventory if player is a detective
-void Player::move(Station* destination, int transportType, Player& mrX) {
+void Player::move(int destination, int transportType, Player& mrX) {
     if (canMove(transportType)) {
         currentStation = destination;
 
@@ -138,7 +137,7 @@ void Player::move(Station* destination, int transportType, Player& mrX) {
 
 
 // Mr. X double moves
-void Player::moveWithDouble(Station* destination1, Station* destination2) {
+void Player::moveWithDouble(int destination1, int destination2) {
     if (isMrX && doubleMoves > 0) {
         currentStation = destination1;  // First move
         currentStation = destination2;  // Second move

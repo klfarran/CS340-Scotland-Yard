@@ -19,7 +19,7 @@
 	}
 	
 	// Return vector of station numbers for the shortest path from start to end
-	vector<int> DetectiveStrategy::shortestPath(Player detective, Station start, Station end, vector<Station> board) { 
+	vector<int> DetectiveStrategy::shortestPath(Player detective, int start, int end, vector<Station> board) { 
 		// Infinity, for use in dijkstra
 		const int INF = numeric_limits<int>::max();
 		int totalStations = 199;
@@ -27,7 +27,7 @@
 		// Get detective locations
 		vector<int> detectiveLocations;
 		for(const Player detective : detectives){
-			detectiveLocations.push_back(detective.getCurrentStation()->getStationNum());
+			detectiveLocations.push_back(detective.getCurrentStation());
 		}
 
 		// Distance vector and visited array
@@ -38,7 +38,7 @@
 		vector<int> predecessors(totalStations, -1);
 
 		// Start station is distance 0
-		distances[start.getStationNum() - 1] = 0;
+		distances[start - 1] = 0;
 
 		// Get tickets
 		int taxiTix = detective.getTaxiTickets();
@@ -62,16 +62,14 @@
 				break;
 			visited[currStation] = true;
 
-			// Get current station object?
-			Station curr = board[currStation];
 			// Get adjacent stations
-			vector<int> adjacents = curr.getAllAdjacentStations(detectiveLocations, taxiTix, busTix, subwayTix);
+			vector<int> adjacents = board[currStation].getAllAdjacentStations(detectiveLocations, taxiTix, busTix, subwayTix);
 
 			// Update distances for adjacent stations
 			for(int adj : adjacents){
-				Station adjStation = board[adj - 1];
-				// Get all transport types from curr to adjStation
-				vector<int> transportTypes = curr.getAllTransportTypesTo(adjStation);
+
+				// Get all transport types from board[currStation] to board[adj - 1]
+				vector<int> transportTypes = board[currStation].getAllTransportTypesTo(board[adj - 1]);
 				
 				for (int transportType : transportTypes) {
 					// Each transport uses one ticket
@@ -100,7 +98,7 @@
 
 		// Reconstruct shortest path
 		vector<int> shortestPath;
-		int curr = end.getStationNum() - 1;
+		int curr = end - 1;
 
 		while(curr != -1){
 			shortestPath.push_back(board[curr].getStationNum());
@@ -113,31 +111,32 @@
 	
 	//Uses shortestPath and loops through mr. x’s potential locations and 
 	//selects the location with the minimal distance for the detective 'detective'
-	Station DetectiveStrategy::chooseOptimalDetectiveMove(Player detective, vector<int> detectiveLocations, TreeNode potentialMrXLocations, vector<Station> board) {
-		//leaves of the tree of potential mrX locations are the current potential mrx locations- get them 
+	int DetectiveStrategy::chooseOptimalDetectiveMove(Player detective, vector<int> detectiveLocations, TreeNode potentialMrXLocations, vector<Station> board) {
+			//leaves of the tree of potential mrX locations are the current potential mrx locations- get them 
 		vector<TreeNode> locations; 
 		potentialMrXLocations.getLeaves(potentialMrXLocations, locations); //locations is updated by reference to contain the leaves 
-		
-		if(locations[0].getStation().getStationNum() == -1) {//its round 1 or 2, and our tree is "empty" 
+
+		if(locations[0].getStation() == -1) {//its round 1 or 2, and our tree is "empty" 
 			//move to a spot on the board that is optimal for being able to move 'anywhere' 
 			//this Station has to be a valid move from where the detective is, so get all valid next stations: 
-			vector<int> adjacents = detective.getCurrentStation()->getAllAdjacentStations(detectiveLocations, detective.getTaxiTickets(), detective.getBusTickets(), detective.getSubwayTickets());
+			vector<int> adjacents = board[detective.getCurrentStation()-1].getAllAdjacentStations(detectiveLocations, detective.getTaxiTickets(), detective.getBusTickets(), detective.getSubwayTickets());
+			
 			return optimalBlindMove(adjacents, board);
 		}
 		  else { //carry on normally 
 			int shortestPathLen = INT_MAX; //current shortest path found
 			int curPathLen;  //current path we're working with 
 			vector<int> curPath;
-			Station* detectiveStation = detective.getCurrentStation();
+			int detectiveStation = detective.getCurrentStation();
 		
 			for(TreeNode curPotentialLoc : locations) {
-				curPath = this->shortestPath(detective, *detectiveStation, curPotentialLoc.getStation(), board);
+				curPath = this->shortestPath(detective, detectiveStation, curPotentialLoc.getStation(), board);
 				curPathLen = curPath.size();
 				if(curPathLen < shortestPathLen) {
 					shortestPathLen = curPathLen;
 				}
 			}
-				return board[curPath[0]-1];
+				return curPath[0];
 		}
 	}
 	
@@ -206,16 +205,16 @@ for (int k = 0; k < detectives.size(); k++) {
 	//'start' is the current station of the detective 
 	//TO-DO: in GameManager, need to create function getSubwayStations(vector<Station> board) to be able to pass the subway stations to this function 
 	//subway stations: 1, 46, 74, 93, 79, 111, 163, 153, 140, 185, 159, 13, 67, 89
-	vector<int> DetectiveStrategy::pathToClosestSubway(Player detective, int moves, vector<Station> subwayStations, vector<Station> board) {
+	vector<int> DetectiveStrategy::pathToClosestSubway(Player detective, int moves, vector<int> subwayStations, vector<Station> board) {
 				
 			int shortestPathLen = INT_MAX;	
 			int curPathLen;
 			vector<int> shortestPath;
-			Station* detectiveStation = detective.getCurrentStation();
+			int detectiveStation = detective.getCurrentStation();
 			
 			//call shortestPath between start and each subway station to see if any subway station is reachable in under 'moves' # of moves 
-			for(Station curSubStation : subwayStations) {
-				shortestPath = this->shortestPath(detective, *detectiveStation, curSubStation, board);
+			for(int curSubStation : subwayStations) {
+				shortestPath = this->shortestPath(detective, detectiveStation, curSubStation, board);
 				curPathLen = shortestPath.size();
 				if(curPathLen < shortestPathLen && curPathLen < moves) //path is shorter than current shortest path AND less than 'moves' # of moves
 					shortestPathLen = curPathLen;
@@ -332,7 +331,7 @@ void dfsHelper(int currentStationNum, int movesLeft, vector<bool>& visited, vect
 	
 	//takes a vector of station numbers which are the currently reachable stations of the current detective and 
 	//returns the station which has the most edges to other stations (has the most access to other stations)
-	Station DetectiveStrategy::optimalBlindMove(vector<int> adjacents, vector<Station> board) {
+	int DetectiveStrategy::optimalBlindMove(vector<int> adjacents, vector<Station> board) {
 		//for debugging, delete later: 
 		/*
 		cout << "choosing optimal blind move. adjacent stations: " ;
@@ -342,11 +341,11 @@ void dfsHelper(int currentStationNum, int movesLeft, vector<bool>& visited, vect
 		cout << endl;
 		*/
 		//start by setting optimal to be the first adjacent station
-		Station optimal = board[adjacents[0]-1];
+		int optimal = adjacents[0];
 		
 		for(int i = 1; i < adjacents.size(); i++) {
-			if(board[adjacents[i]-1].getNumEdges() > optimal.getNumEdges())
-				optimal = board[adjacents[i]-1];
+			if(board[adjacents[i]-1].getNumEdges() > board[optimal -1].getNumEdges())
+				optimal = board[adjacents[i]-1].getStationNum();
 		}
 		
 		return optimal;

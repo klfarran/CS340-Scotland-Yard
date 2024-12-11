@@ -13,7 +13,8 @@ class Station {
 	public:
 		//contructor
 		Station(int inStationNumber, vector<Edge> inEdges);
-		Station();
+		Station(const Station& other); //copy constructor
+		Station(); //default constructor
 		
 		//methods
 		int getStationNum();
