@@ -2,6 +2,7 @@
 	#include <iostream>
 	#include <fstream>
 	#include <sstream>
+	#include <limits>
 	
 	#include "Station.h"
 	#include "Edge.h"
@@ -22,6 +23,15 @@
 	//function to return the number of the current round of the game 
 	int GameManager::getRound(){
 		return round;
+	}
+	
+	//returns true if the vector 'nums' containsNum the int 'wanted', false otherwise 
+	bool containsNum(vector<int> nums, int wanted) {
+		for (int i = 0; i < nums.size(); i++) {
+			if(nums[i] == wanted)
+				return true;
+		}
+		return false;
 	}
 	
 	//function to initialize the game board 
@@ -138,12 +148,33 @@
 			char useDoubleMove;
 			cout << "Do you want to use a double move? (y/n): ";
 			cin >> useDoubleMove;
+			
+			//catch invalid input 
+			while (cin.fail() || (useDoubleMove != 'y' && useDoubleMove != 'n')) {
+				cin.clear(); // clear the error flag
+				cin.ignore(numeric_limits<streamsize>::max(), '\n'); // discard trash input (all the way until new line)
+				cout << "\nInvalid input. Please enter 'y' or 'n'." << endl;
+				cin >> useDoubleMove; //actually reprompt for new input 
+			}	
 
 			if(useDoubleMove == 'y' && mrX.getDoubleMoves() > 0){
 				// Ask for the transport type and destination for Mr. X's first move
 				int firstStation, firstTransport;
 				cout << "Enter the first destination station number: ";
 				cin >> firstStation;
+				
+				//catch invalid input 
+				while (cin.fail() || !containsNum(possibleMoves, firstStation)) {
+					cin.clear(); // clear the error flag
+					cin.ignore(numeric_limits<streamsize>::max(), '\n'); // discard trash input (all the way until new line)
+					cout << "\nInvalid input. Please enter a valid first destination station number." << endl;
+					cout << "The valid destination station numbers are: ";
+					for (int stationNum : possibleMoves) {
+						cout << stationNum << " ";
+					}
+					cout << endl;
+					cin >> firstStation; //actually reprompt for new input 
+				}	
 				
 				//print available transportation methods for user 
 				vector<int> availTransportTypes = board[mrX.getCurrentStation()-1].getAllTransportTypesTo(board[firstStation-1]);
@@ -152,6 +183,16 @@
 				
 				cout << "Enter the first transport type (1: Taxi, 2: Bus, 3: Subway, 4: Black Ticket): ";
 				cin >> firstTransport;
+				
+				//catch invalid input 
+				while (cin.fail() || !containsNum(availTransportTypes, firstTransport)) {
+					cin.clear(); // clear the error flag
+					cin.ignore(numeric_limits<streamsize>::max(), '\n'); // discard trash input (all the way until new line)
+					cout << "\nInvalid input. Please enter a valid transport type." << endl;
+					cout << "The available transport types are: ";
+					printAvailalbeTransportTypes(availTransportTypes);
+					cin >> firstTransport; //actually reprompt for new input 
+				}
 
 				//show possible destinations for second half of double move: 
 				vector<int> possibleSecondMoves = board[firstStation-1].getAllAdjacentStations(getDetectiveLocations(detectives), mrX.getTaxiTickets(),mrX.getBusTickets(), mrX.getSubwayTickets());
@@ -163,8 +204,21 @@
 				
 				// Ask for the transport type and destination for Mr. X's double move
 				int doubleStation, doubleTransport;
-				cout << "Enter the second destination station number: ";
+				cout << "\nEnter the second destination station number: ";
 				cin >> doubleStation;
+				
+				//catch invalid input 
+				while (cin.fail() || !containsNum(possibleSecondMoves, doubleStation)) {
+					cin.clear(); // clear the error flag
+					cin.ignore(numeric_limits<streamsize>::max(), '\n'); // discard trash input (all the way until new line)
+					cout << "\nInvalid input. Please enter a valid second destination station number." << endl;
+					cout << "The valid destination station numbers are: ";
+					for (int stationNum : possibleSecondMoves) {
+						cout << stationNum << " ";
+					}
+					cout << endl;
+					cin >> doubleStation; //actually reprompt for new input 
+				}
 				
 				//print available transportation methods for user 
 				vector<int> secondAvailTransportTypes = board[firstStation-1].getAllTransportTypesTo(board[doubleStation-1]);
@@ -173,6 +227,16 @@
 				
 				cout << "Enter the second transport type (1: Taxi, 2: Bus, 3: Subway, 4: Black Ticket): ";
 				cin >> doubleTransport;	
+				
+				//catch invalid input 
+				while (cin.fail() || !containsNum(secondAvailTransportTypes, doubleTransport)) {
+					cin.clear(); // clear the error flag
+					cin.ignore(numeric_limits<streamsize>::max(), '\n'); // discard trash input (all the way until new line)
+					cout << "\nInvalid input. Please enter a valid transport type." << endl;
+					cout << "The available transport types are: ";
+					printAvailalbeTransportTypes(secondAvailTransportTypes);
+					cin >> doubleTransport; //actually reprompt for new input 
+				}
 
 				// Move Mr. X if possible
 				if (mrX.canMove(firstTransport) && mrX.canMove(doubleTransport)) {
@@ -187,6 +251,20 @@
 				int chosenStation, chosenTransport;
 				cout << "Enter the destination station number: ";
 				cin >> chosenStation;
+				
+				//catch invalid input 
+				while (cin.fail() || !containsNum(possibleMoves, chosenStation)) {
+					cin.clear(); // clear the error flag
+					cin.ignore(numeric_limits<streamsize>::max(), '\n'); // discard trash input (all the way until new line)
+					cout << "\nInvalid input. Please enter a valid destination station number." << endl;
+					cout << "The valid destination station numbers are: ";
+					for (int stationNum : possibleMoves) {
+						cout << stationNum << " ";
+					}
+					cout << endl;
+					cin >> chosenStation; //actually reprompt for new input 
+				}
+				
 				//print available transportation methods for user 
 				vector<int> availTransportTypes = board[mrX.getCurrentStation()-1].getAllTransportTypesTo(board[chosenStation-1]);
 				cout << "\nAvailable modes of transportation: ";
@@ -194,6 +272,16 @@
 				
 				cout << "Enter the desired transport type (1: Taxi, 2: Bus, 3: Subway, 4: Black Ticket): ";
 				cin >> chosenTransport;
+				
+				//catch invalid input 
+				while (cin.fail() || !containsNum(availTransportTypes, chosenTransport)) {
+					cin.clear(); // clear the error flag
+					cin.ignore(numeric_limits<streamsize>::max(), '\n'); // discard trash input (all the way until new line)
+					cout << "\nInvalid input. Please enter a valid transport type." << endl;
+					cout << "The available transport types are: ";
+					printAvailalbeTransportTypes(availTransportTypes);
+					cin >> chosenTransport; //actually reprompt for new input 
+				}
 				
 				// Move Mr. X if possible
 				if (mrX.canMove(chosenTransport)) {
@@ -218,8 +306,10 @@
 				cout << "Detective #" << detectiveNum << " at station " << detectives[i].getCurrentStation() << " is moving..." << endl;
 				int stationNum = detectives[i].getCurrentStation();
 				// Detective chooses optimal solution based on shortest path to potential Mr X location
+				
+				//CRASHING IN THIS NEXT LINE RIGHT NOW
 				int nextStation = detectiveStrategy.chooseOptimalDetectiveMove(detectives[i], getDetectiveLocations(detectives), possibleMrXLocations, board);
-				//cout << "destination station: " <<nextStation << " " << endl; 
+				cout << "destination station: " <<nextStation << " " << endl; 
 
 				detectives[i].setCurrentStation(stationNum);
 				
@@ -248,10 +338,14 @@
 
 			// Increment round
 			round++;
+			
+			//update detectives in detectiveStrategy
+			detectiveStrategy.updateDetectives(detectives);
 
 			// Continue to the next round unless gameOver is true
     	}
 	}
+	
 	
 	//function which takes a list of detectives (players minus mrX) and returns a vector of integers which are the 
 	//corresponding station numbers of the station that each detective is at 

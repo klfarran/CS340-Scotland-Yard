@@ -29,6 +29,7 @@ public:
 	int distanceToPotentialMrX();
 	int chooseBestTicket(Player detective, vector<int> availableTransports);
 	int optimalBlindMove(vector<int> adjacents, vector<Station> board);
+	void updateDetectives(vector<Player> inDetectives);
 	
 };
 
