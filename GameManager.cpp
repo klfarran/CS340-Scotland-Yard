@@ -218,8 +218,10 @@
 				cout << "Detective #" << detectiveNum << " at station " << detectives[i].getCurrentStation() << " is moving..." << endl;
 				int stationNum = detectives[i].getCurrentStation();
 				// Detective chooses optimal solution based on shortest path to potential Mr X location
+				
+				//CRASHING IN THIS NEXT LINE RIGHT NOW
 				int nextStation = detectiveStrategy.chooseOptimalDetectiveMove(detectives[i], getDetectiveLocations(detectives), possibleMrXLocations, board);
-				//cout << "destination station: " <<nextStation << " " << endl; 
+				cout << "destination station: " <<nextStation << " " << endl; 
 
 				detectives[i].setCurrentStation(stationNum);
 				
@@ -248,6 +250,9 @@
 
 			// Increment round
 			round++;
+			
+			//update detectives in detectiveStrategy
+			detectiveStrategy.updateDetectives(detectives);
 
 			// Continue to the next round unless gameOver is true
     	}

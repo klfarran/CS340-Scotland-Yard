@@ -29,7 +29,7 @@
 		for(const Player detective : detectives){
 			detectiveLocations.push_back(detective.getCurrentStation());
 		}
-
+		
 		// Distance vector and visited array
 		vector<int> distances(totalStations, INF);
 		vector<bool> visited(totalStations, false);
@@ -115,12 +115,18 @@
 			//leaves of the tree of potential mrX locations are the current potential mrx locations- get them 
 		vector<TreeNode> locations; 
 		potentialMrXLocations.getLeaves(potentialMrXLocations, locations); //locations is updated by reference to contain the leaves 
+		cout << "root: " << potentialMrXLocations.getStation() << endl;
+		cout << "printing leaves only: " << potentialMrXLocations.getNumChildren() << endl;
+		for (int i = 0; i < locations.size(); i++){
+		 	cout << locations[i].getStation() << " ";
+		}
+		cout << endl;
 
 		if(locations[0].getStation() == -1) {//its round 1 or 2, and our tree is "empty" 
 			//move to a spot on the board that is optimal for being able to move 'anywhere' 
 			//this Station has to be a valid move from where the detective is, so get all valid next stations: 
 			vector<int> adjacents = board[detective.getCurrentStation()-1].getAllAdjacentStations(detectiveLocations, detective.getTaxiTickets(), detective.getBusTickets(), detective.getSubwayTickets());
-			
+			cout << "in empty tree case" << endl;
 			return optimalBlindMove(adjacents, board);
 		}
 		  else { //carry on normally 
@@ -128,9 +134,10 @@
 			int curPathLen;  //current path we're working with 
 			vector<int> curPath;
 			int detectiveStation = detective.getCurrentStation();
-		
-			for(TreeNode curPotentialLoc : locations) {
-				curPath = this->shortestPath(detective, detectiveStation, curPotentialLoc.getStation(), board);
+
+			for(int i = 0; i < locations.size(); i++) {
+				//CRASHING IN THIS NEXT LINE RIGHT NOW
+				curPath = this->shortestPath(detective, detectiveStation, locations[i].getStation(), board);
 				curPathLen = curPath.size();
 				if(curPathLen < shortestPathLen) {
 					shortestPathLen = curPathLen;
@@ -342,4 +349,10 @@
 		}
 		
 		return optimal;
+	}
+	
+	
+	//updates our detectives to reflect the most current detective info (location, ticket info)
+	void DetectiveStrategy::updateDetectives(vector<Player> inDetectives) {
+		detectives = inDetectives;
 	}
