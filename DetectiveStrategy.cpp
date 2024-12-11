@@ -37,8 +37,8 @@
 		// Track predecessors to rebuild path later
 		vector<int> predecessors(totalStations, -1);
 
-		// Start station is distance 0
-		distances[start - 1] = 0;
+		distances[start - 1] = 0;  // Starting station's distance is zero
+		predecessors[start - 1] = -1;  // Starting node has no predecessor
 
 		// Get tickets
 		int taxiTix = detective.getTaxiTickets();
@@ -56,45 +56,29 @@
 					currStation = j;
 				}
 			}
-cout << i << " round of for loop in shortestPath" << endl;
 			// All reachable stations have been visited
-			if(currStation == -1)
+			if(currStation == -1){
 				break;
+			}
 			visited[currStation] = true;
 
 			// Get adjacent stations
 			vector<int> adjacents = board[currStation].getAllAdjacentStations(detectiveLocations, taxiTix, busTix, subwayTix);
 
 			// Update distances for adjacent stations
-			for(int adj : adjacents){
-
-				// Get all transport types from board[currStation] to board[adj - 1]
+			for (int adj : adjacents) {
 				vector<int> transportTypes = board[currStation].getAllTransportTypesTo(board[adj - 1]);
-				
 				for (int transportType : transportTypes) {
-					// Each transport uses one ticket
-					int ticketCost = 1; 
-
-					// Check ticket availability
-					bool hasTickets = (transportType == 1 && taxiTix > 0) || (transportType == 2 && busTix > 0) || (transportType == 4 && subwayTix > 0);
-
-					if (!hasTickets){
-						// Update distances if a shorter path is found
-						if (!visited[adj - 1] && distances[currStation] + ticketCost < distances[adj - 1]) {
-							distances[adj - 1] = distances[currStation] + ticketCost;
-							predecessors[adj - 1] = currStation;
-
-							// Deduct tickets from the detective?
-							if (transportType == 1) taxiTix--;
-							if (transportType == 2) busTix--;
-							if (transportType == 4) subwayTix--;
-						}
+					bool hasTickets = (transportType == 1 && taxiTix > 0) || 
+									(transportType == 2 && busTix > 0) || 
+									(transportType == 4 && subwayTix > 0);
+					if (hasTickets && !visited[adj - 1] && distances[currStation] + 1 < distances[adj - 1]) {
+						distances[adj - 1] = distances[currStation] + 1;
+						predecessors[adj - 1] = currStation;
 					}
 				}
 			}
 		}
-		// Return shortest distance to end station
-		//return distances[end.getStationNum() - 1];
 
 		// Reconstruct shortest path
 		vector<int> shortestPath;
@@ -102,6 +86,7 @@ cout << i << " round of for loop in shortestPath" << endl;
 
 		while(curr != -1){
 			shortestPath.push_back(board[curr].getStationNum());
+        	curr = predecessors[curr];
 		}
 
 		reverse(shortestPath.begin(), shortestPath.end());
@@ -112,7 +97,7 @@ cout << i << " round of for loop in shortestPath" << endl;
 	//Uses shortestPath and loops through mr. x’s potential locations and 
 	//selects the location with the minimal distance for the detective 'detective'
 	int DetectiveStrategy::chooseOptimalDetectiveMove(Player detective, vector<int> detectiveLocations, TreeNode potentialMrXLocations, vector<Station> board) {
-			//leaves of the tree of potential mrX locations are the current potential mrx locations- get them 
+		//leaves of the tree of potential mrX locations are the current potential mrx locations- get them 
 		vector<TreeNode> locations; 
 		potentialMrXLocations.getLeaves(potentialMrXLocations, locations); //locations is updated by reference to contain the leaves 
 		//debugging:
@@ -124,27 +109,36 @@ cout << i << " round of for loop in shortestPath" << endl;
 		}
 		cout << endl;
 		*/
+
 		if(locations[0].getStation() == -1) {//its round 1 or 2, and our tree is "empty" 
 			//move to a spot on the board that is optimal for being able to move 'anywhere' 
 			//this Station has to be a valid move from where the detective is, so get all valid next stations: 
 			vector<int> adjacents = board[detective.getCurrentStation()-1].getAllAdjacentStations(detectiveLocations, detective.getTaxiTickets(), detective.getBusTickets(), detective.getSubwayTickets());
 			return optimalBlindMove(adjacents, board);
 		}
-		  else { //carry on normally 
+		else { //carry on normally 
 			int shortestPathLen = INT_MAX; //current shortest path found
 			int curPathLen;  //current path we're working with 
 			vector<int> curPath;
+
 			int detectiveStation = detective.getCurrentStation();
 
 			for(int i = 0; i < locations.size(); i++) {
-				//CRASHING IN THIS NEXT LINE RIGHT NOW
 				curPath = this->shortestPath(detective, detectiveStation, locations[i].getStation(), board);
 				curPathLen = curPath.size();
 				if(curPathLen < shortestPathLen) {
 					shortestPathLen = curPathLen;
 				}
 			}
-				return curPath[0];
+			
+			/*
+			// debugging
+			for(int i = 0; i < curPath.size(); i++){
+				cout << curPath[i] << endl;
+			}
+			*/
+
+			return curPath[1];
 		}
 	}
 	

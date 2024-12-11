@@ -306,24 +306,24 @@
 				cout << "Detective #" << detectiveNum << " at station " << detectives[i].getCurrentStation() << " is moving..." << endl;
 				int stationNum = detectives[i].getCurrentStation();
 				// Detective chooses optimal solution based on shortest path to potential Mr X location
-				
-				//CRASHING IN THIS NEXT LINE RIGHT NOW
+			
 				int nextStation = detectiveStrategy.chooseOptimalDetectiveMove(detectives[i], getDetectiveLocations(detectives), possibleMrXLocations, board);
 				cout << "destination station: " <<nextStation << " " << endl; 
 
 				detectives[i].setCurrentStation(stationNum);
 				
 				vector<int> transportTypes = board[detectives[i].getCurrentStation()-1].getAllTransportTypesTo(board[nextStation-1]);
-				
+
 				//for debugging, delete later 
-				//cout << "current station: " << detectives[i].getCurrentStation()->getStationNum() << endl;
-				/*
+				// REASON FOR CRASH: choosing destination station that current station isnt connected to
+				cout << "current station: " << detectives[i].getCurrentStation() << endl;
+				
 				cout << "transport types: ";
 				for (int k = 0; k < transportTypes.size(); k++) {
 					cout << transportTypes[k] << " ";
 				}
 				cout << endl;
-				*/
+				
 				// Just choose the first transport type for now
 				detectives[i].move(nextStation, transportTypes[0], mrX);
 
