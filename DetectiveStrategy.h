@@ -8,6 +8,8 @@
 class DetectiveStrategy {
 private:
     vector<Player> detectives;
+	void dfsHelper(int currentStationNum, int movesLeft, vector<bool>& visited, vector<Station>& reachableStations, vector<Station>& board, int& taxiTix, int& busTix, int& subwayTix);
+	void performDFS(int startStation, int moves, vector<Station>& board, int taxiTix, int busTix, int subwayTix, vector<Station>& reachableStations);
 
 public:
     // Constructor
@@ -23,7 +25,7 @@ public:
 	Station breakTie(vector<Station> destinations);
 	void detectiveGreedyMove(vector<TreeNode> potentialMrXLocations, vector<Station> board);
 	vector<int> pathToClosestSubway(Player detective, int moves, vector<int> subwayStations, vector<Station> board);
-	vector<Station> getReachableStations(Station start, int movesRemaining);
+	vector<vector<Station>> getReachableStations(vector<Player>& detectives, int movesUntilReveal, vector<Station>& board);
 	int distanceToPotentialMrX();
 	int chooseBestTicket(Player detective, vector<int> availableTransports);
 	int optimalBlindMove(vector<int> adjacents, vector<Station> board);

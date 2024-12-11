@@ -147,58 +147,57 @@
 		return Station(0, edges);
 	}
 	
-	//pulls optimal moves and uses tie to decide which detective gets ahead.  
-//this needs the tree node vetor to show the potential X locations. 
-//the stations that rep the board. 
-void DetectiveStrategy::detectiveGreedyMove(vector<TreeNode> potentialMrXLocations, vector<Station> board) {
-	/*
-//need to hold all of the stations that a detective goes to
-vector<int> detectiveDestinations(detectives.size());
-	
-	//go thorugh each detective and pulls the optimal move for that detective
-for (int i =0; i<detectives.size(); i++){
-	Player& detective = detectives[i];
-	int optimal = chooseOptimalDetectiveMove(detective, potentialMrXLocations, board).getStationNum();
+	//pulls optimal moves an	d uses tie to decide which detective gets ahead.  
+	//this needs the tree node vetor to show the potential X locations. 
+	//the stations that rep the board. 
+	void DetectiveStrategy::detectiveGreedyMove(vector<TreeNode> potentialMrXLocations, vector<Station> board) {
+		/*
+	//need to hold all of the stations that a detective goes to
+	vector<int> detectiveDestinations(detectives.size());
+		
+		//go thorugh each detective and pulls the optimal move for that detective
+	for (int i =0; i<detectives.size(); i++){
+		Player& detective = detectives[i];
+		int optimal = chooseOptimalDetectiveMove(detective, potentialMrXLocations, board).getStationNum();
 
-//make sure that the location has not conflict. 
-bool conflict = false;
-for (int j = 0; j < i; j++) {
-	//goes through destinations vector to make sure none are equal
-if (detectiveDestinations[j] == optimal) {
-	//is a detective already at that station, then make the conflict bool true
-conflict = true;
-}
-   }
-
-if (conflict) {
-//making a vectore to hold the stations with conflicts 
-vector<Station> conflictingDestinations;
-conflictingDestinations.push_back(board[optimal -1]);
-//when a station has a conflict dont move rhat detective. -1 keeps detective in same place 
-//get a different station from break tie 
-int resolvedmove = breakTie((conflictingDestinations).getStationNum());
-//make the breaktie move the current move
- detectiveDestinations[i] = resolvedmove;
-} 
-else {
- detectiveDestinations[i] = optimal;
-}
-}
-
-   
-for (int k = 0; k < detectives.size(); k++) {
-    Player& detective = detectives[k];
-    int destinationNum = detectiveDestinations[k];
-	
-	//make sure the station is a valid destination 
-	if (destinationNum >= 1 && destinationNum <= board.size()){
-    Station destination = board[destinationNum - 1]; 
-    detective.setCurrentStation(destination);
+	//make sure that the location has not conflict. 
+	bool conflict = false;
+	for (int j = 0; j < i; j++) {
+		//goes through destinations vector to make sure none are equal
+	if (detectiveDestinations[j] == optimal) {
+		//is a detective already at that station, then make the conflict bool true
+	conflict = true;
 	}
-    }
-*/
-}
+	}
 
+	if (conflict) {
+	//making a vectore to hold the stations with conflicts 
+	vector<Station> conflictingDestinations;
+	conflictingDestinations.push_back(board[optimal -1]);
+	//when a station has a conflict dont move rhat detective. -1 keeps detective in same place 
+	//get a different station from break tie 
+	int resolvedmove = breakTie((conflictingDestinations).getStationNum());
+	//make the breaktie move the current move
+	detectiveDestinations[i] = resolvedmove;
+	} 
+	else {
+	detectiveDestinations[i] = optimal;
+	}
+	}
+
+	
+	for (int k = 0; k < detectives.size(); k++) {
+		Player& detective = detectives[k];
+		int destinationNum = detectiveDestinations[k];
+		
+		//make sure the station is a valid destination 
+		if (destinationNum >= 1 && destinationNum <= board.size()){
+		Station destination = board[destinationNum - 1]; 
+		detective.setCurrentStation(destination);
+		}
+		}
+	*/
+	}
 	
 	//Returns a vector<int> which is the path (station #s in order) to the nearest subway station that the detective can reach in 'moves' number of moves
 	//'moves' is the number of moves before mr. x shows up
@@ -227,102 +226,94 @@ for (int k = 0; k < detectives.size(); k++) {
 			return shortestPath;
 	}
 	
-	
-vector<vector<Station>> DetectiveStrategy::getReachableStations(vector<Player>& detectives, int movesUntilReveal, vector<Station>& board) {
-    vector<vector<Station>> allDetectiveStations; // a vectore of detectives, inner vectors store the staions for each dectective
+	// For each detective, returns a vector of reachable stations they could get to in a certain amount of moves
+	vector<vector<Station>> DetectiveStrategy::getReachableStations(vector<Player>& detectives, int movesUntilReveal, vector<Station>& board) {
+    	vector<vector<Station>> allDetectiveStations;
 
-//going through each detective from players 
-//
-    for ( int i =0; i< detectives.size(); i++){
-		Player& detective = detectives[i];
-        vector<Station> reachableStations; 
-        vector<bool> visited(board.size(), false); 
+		//going through each detective from players
+		for (Player& detective : detectives) {
+			vector<Station> reachableStations;
 
-        int taxiTix = detective.getTaxiTickets();
-        int busTix = detective.getBusTickets();
-        int subwayTix = detective.getSubwayTickets();
+			int taxiTix = detective.getTaxiTickets();
+			int busTix = detective.getBusTickets();
+			int subwayTix = detective.getSubwayTickets();
 
-//need the current staion, number of remaining moves, tracker ofr staions, vector of reachable staions to add to, 
-//the reamianing tickets for each 
+			// Perform DFS for the current detective
+			performDFS(detective.getCurrentStation(), movesUntilReveal, board, taxiTix, busTix, subwayTix, reachableStations);
 
-void dfsHelper(int currentStationNum, int movesLeft, vector<bool>& visited, vector<Station>& reachableStations,
+			allDetectiveStations.push_back(reachableStations);
+		}
+
+		return allDetectiveStations;
+	}
+
+	void performDFS(int startStation, int moves, vector<Station>& board, int taxiTix, int busTix, int subwayTix,
+		vector<Station>& reachableStations) {
+		
+		// create the vector of visited stations (false for all stations so they are makred unvisited befoe the helper is called)
+		vector<bool> visited(board.size(), false);
+
+		//  helper function starting at the start station
+		dfsHelper(startStation, moves, visited, reachableStations, board, taxiTix, busTix, subwayTix);
+	}
+
+	void dfsHelper(int currentStationNum, int movesLeft, vector<bool>& visited, vector<Station>& reachableStations,
                vector<Station>& board, int& taxiTix, int& busTix, int& subwayTix) {
-   //mark current staion as visted and add it to reach vector
-    visited[currentStationNum - 1] = true;
-    reachableStations.push_back(board[currentStationNum - 1]);
+		//mark current staion as visted and add it to reach vector
+		visited[currentStationNum - 1] = true;
+		reachableStations.push_back(board[currentStationNum - 1]);
 
-    // end recursion if no moves are left
-    if (movesLeft <= 0) {
-        return;
-    }
+		//end recursion if no moves are left
+		if (movesLeft <= 0) {
+			return;
+		}
 
-    vector<int> adjacents;
-	//get the current station local 
-    Station& currentStation = board[currentStationNum - 1];
-//what stations are reachable based on tickets
-   adjacents = currentStation.getAllAdjacentStations(
-    {},        // No other detectives to consider
-    taxiTix,   //  taxi tickets
-    busTix,    //  bus tickets
-    subwayTix  // subway tickets
-);
+		vector<int> adjacents;
+		//get the current station local 
+		Station& currentStation = board[currentStationNum - 1];
+		//what stations are reachable based on tickets
+		adjacents = currentStation.getAllAdjacentStations(
+			{},        // No other detectives to consider
+			taxiTix,   //  taxi tickets
+			busTix,    //  bus tickets
+			subwayTix  // subway tickets
+		);
+		
+		for (int adj : adjacents) {
+			//if the adjacent station has not beeen visited yet then 
+			if (!visited[adj - 1]) {
+				//get the current ways to travel depednng o n the current station
+				vector<int> transportTypes = currentStation.getAllTransportTypesTo(board[adj - 1]);
+				bool canProceed = false;
 
-    for (int i =0; i < adjacents.size(); i++) {
-		int adj = adjacents[i];
-		//if the adjacent station has not beeen visited yet then 
-        if (!visited[adj - 1]) {
-            //get the current ways to travel depednng o n the current station
-            vector<int> transportTypes = board[currentStationNum - 1].getAllTransportTypesTo(board[adj - 1]);
-            bool canProceed = false;
+				for (int transport : transportTypes) {
+					//check if a ticket can be used and then take thatused ticket away
+					if (transport == 1 && taxiTix > 0) {
+						taxiTix--;
+						canProceed = true;
+					} else if (transport == 2 && busTix > 0) {
+						busTix--;
+						canProceed = true;
+					} else if (transport == 4 && subwayTix > 0) {
+						subwayTix--;
+						canProceed = true;
+					}
 
-            for (int j =0; j < transportTypes.size(); j++) {
-				int transport = transportTypes[j];
-				//check if a ticket can be used and then take thatused ticket away
-                if (transport == 1 && taxiTix > 0) {
-                    taxiTix--;
-                    canProceed = true;
-                } else if (transport == 2 && busTix > 0) {
-                    busTix--;
-                    canProceed = true;
-                } else if (transport == 4 && subwayTix > 0) {
-                    subwayTix--;
-                    canProceed = true;
-                }
+					if (canProceed) {
+						//moves left goes down by one in this call of helper
+						dfsHelper(adj, movesLeft - 1, visited, reachableStations, board, taxiTix, busTix, subwayTix);
 
-                if (canProceed) {
-					//moves left goes down by one in this call of helper
-                    dfsHelper(adj, movesLeft - 1, visited, reachableStations, board, taxiTix, busTix, subwayTix);
-
-                    //putting the tickets back for estimating the next reahcbale move 
-                    if (transport == 1) taxiTix++;
-                    if (transport == 2) busTix++;
-                    if (transport == 4) subwayTix++;
-					//when a valid tranportion type is chosen leve theis loop with break
-                    break;
-                }
-            }
-        }
-    }
-}
-
-        
-        void performDFS(int startStation, int moves, vector<Station>& board, int taxiTix, int busTix, int subwayTix,
-                vector<Station>& reachableStations) {
-    // create the vector of visited stations (false for all stations so they are makred unvisited befoe the helper is called)
-    vector<bool> visited(board.size(), false);
-
-    //  helper function starting at the start station
-    dfsHelper(startStation, moves, visited, reachableStations, board, taxiTix, busTix, subwayTix);
-}
-
-
-        
-	allDetectiveStations.push_back(reachableStations);
-    }
-//retutning the 2D vector of all reachable staions for each detective
-    return allDetectiveStations;
-}
-
+						//putting the tickets back for estimating the next reahcbale move 
+						if (transport == 1) taxiTix++;
+						if (transport == 2) busTix++;
+						if (transport == 4) subwayTix++;
+						//when a valid tranportion type is chosen leve theis loop with break
+						break;
+					}
+				}
+        	}
+    	}
+	}
 	
 	int DetectiveStrategy::chooseBestTicket(Player detective, vector<int> availableTransports) {
 		//Returns highest priority transport types to a given station, like maybe we want to use buses first and save taxis and save subways
