@@ -14,10 +14,14 @@
 		edges = inEdges;
 	}
 	
+	//copy constructor
+	Station::Station(const Station& other) {
+		stationNumber = other.stationNumber;
+		edges = other.edges;
+	}
 	
-	
+	//default constructor
 	Station::Station() {
-		// Default values
 		stationNumber = -1;
 		edges = {};
 	}
@@ -59,14 +63,16 @@
 			isOpen = true; //for each destination station, we start by assuming that its "open" (there are no detectives already there)
 			//for each station that a detective currently occupies 
 			for(int j = 0; j < locations.size(); j++) {
-				if(locations[j] == (edges[i].getPointB())) //if there is a detective at this possible destination station, its not "open" to be moved to 
+				if(locations[j] == edges[i].getPointB()) //if there is a detective at this possible destination station, its not "open" to be moved to 
 					isOpen = false; //so this station is not "open"
 			}
 			
 			if(isOpen) { //this next station is not currently occupied by any player 
 				//check to see if we have a ticket to get there 
 				int transport = edges[i].getTransport();
-				if(transport == 1 && taxiTickets > 0 || transport == 2 && busTickets > 0 || transport == 4 && undTickets > 0) 
+				
+				if(transport == 1 && taxiTickets > 0 || transport == 2 && busTickets > 0 || transport == 3 && (taxiTickets > 0 || busTickets > 0)
+				|| transport == 4 && undTickets > 0 || transport == 6 && (busTickets > 0 || undTickets > 0)) 
 					adjacents.push_back(edges[i].getPointB()); //destination station from our station cur
 			}
 		}
@@ -97,6 +103,7 @@
 		vector<int> transportTypes;
 		vector<Edge> edges = getEdges();
 		for (Edge edge : edges) {
+			//edge.display();
 			if (edge.getPointB() == adjacent.getStationNum()) {
 				transportTypes.push_back(edge.getTransport());
 			}
