@@ -74,7 +74,6 @@
 				if(transport == 1 && taxiTickets > 0 || transport == 2 && busTickets > 0 || transport == 3 && (taxiTickets > 0 || busTickets > 0)
 				|| transport == 4 && undTickets > 0 || transport == 6 && (busTickets > 0 || undTickets > 0)) 
 					adjacents.push_back(edges[i].getPointB()); //destination station from our station cur
-					cout << "transport: " << transport << endl;
 			}
 		}
 
@@ -104,7 +103,7 @@
 		vector<int> transportTypes;
 		vector<Edge> edges = getEdges();
 		for (Edge edge : edges) {
-			edge.display();
+			//edge.display();
 			if (edge.getPointB() == adjacent.getStationNum()) {
 				transportTypes.push_back(edge.getTransport());
 			}

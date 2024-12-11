@@ -58,31 +58,26 @@ int main() {
 							//so that we don't start another player at the same station as someone else 
 	
 	//initialize mrX
-	int xStartStation = draw(possibleStarts, drawn); //get start Station number from "drawing a card"
-	Player mrX(true, &board[xStartStation -1]);
+    //get start Station number from "drawing a card"
+	Player mrX(true, draw(possibleStarts, drawn));
 	
 	
 	//initialize detectives (there are 5)
 	vector<Player> detectives;
 
-	int d1StartStation = draw(possibleStarts, drawn);
-	Player detective1(false, &board[d1StartStation -1]);
+	Player detective1(false, draw(possibleStarts, drawn));
 	detectives.push_back(detective1);
 	
-	int d2StartStation = draw(possibleStarts, drawn);
-	Player detective2(false, &board[d2StartStation -1]);
+	Player detective2(false, draw(possibleStarts, drawn));
 	detectives.push_back(detective2);
 	
-	int d3StartStation = draw(possibleStarts, drawn);
-	Player detective3(false, &board[d3StartStation -1]);
+	Player detective3(false, draw(possibleStarts, drawn));
 	detectives.push_back(detective3);
 	
-	int d4StartStation = draw(possibleStarts, drawn);
-	Player detective4(false, &board[d4StartStation -1]);
+	Player detective4(false, draw(possibleStarts, drawn));
 	detectives.push_back(detective4);
 	
-	int d5StartStation = draw(possibleStarts, drawn);
-	Player detective5(false, &board[d5StartStation -1]);
+	Player detective5(false, draw(possibleStarts, drawn));
 	detectives.push_back(detective5);
 	
 	

@@ -3,7 +3,6 @@
 #include <string>
 #include <vector>
 
-#include "Station.h"
 
 using namespace std;
 
@@ -11,20 +10,20 @@ using namespace std;
 		public:
 		
 		//Constructor
-		TreeNode(Station station, vector<TreeNode> children);
+		TreeNode(int station, vector<TreeNode> children);
 		TreeNode();
 		
 		//Getters
 		vector<TreeNode> getChildren() const;
 		int getNumChildren() const;
 		TreeNode getChild(int stationNumber) const;
-		Station getStation() const;
+		int getStation() const;
 		void getLeaves(TreeNode root, vector<TreeNode>& leaves) const;
 		
 		//Setters
 		void setChildren(vector<TreeNode> inChildren);
 		void setChild(int pos, TreeNode T);	
-		void setStation(Station newStation);
+		void setStation(int newStation);
 
 		//Other Functions
 		bool isLeaf();
@@ -32,7 +31,7 @@ using namespace std;
 		
  
 	private:
-		Station station; 
+		int station; 
 		vector<TreeNode> children;
 	};
 
