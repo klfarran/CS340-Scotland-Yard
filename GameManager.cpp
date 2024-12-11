@@ -432,3 +432,19 @@
 		cout << answer << endl;
 	}
 
+	// Returns vector of subway stations to be used in DetectiveStrategy
+	// 1, 46, 74, 93, 79, 111, 163, 153, 140, 185, 159, 13, 67, 89
+	vector<Station> getSubwayStations(vector<Station> board){
+		vector<Station> subwayStations;
+		for(int i = 0; i < board.size(); i++){
+			vector<Edge> stationEdges = board[i].getEdges();
+			for(int j = 0; j < stationEdges.size(); j++){
+				if(stationEdges[i].getTransport() == 4){
+					subwayStations.push_back(board[i]);
+					break;
+				}
+			}
+		}
+		return subwayStations;
+	}
+

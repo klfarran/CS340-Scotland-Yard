@@ -70,8 +70,8 @@
 				vector<int> transportTypes = board[currStation].getAllTransportTypesTo(board[adj - 1]);
 				for (int transportType : transportTypes) {
 					bool hasTickets = (transportType == 1 && taxiTix > 0) || 
-									(transportType == 2 && busTix > 0) || 
-									(transportType == 4 && subwayTix > 0);
+									  (transportType == 2 && busTix > 0) || 
+									  (transportType == 4 && subwayTix > 0);
 					if (hasTickets && !visited[adj - 1] && distances[currStation] + 1 < distances[adj - 1]) {
 						distances[adj - 1] = distances[currStation] + 1;
 						predecessors[adj - 1] = currStation;
@@ -149,7 +149,7 @@
 		return Station(0, edges);
 	}
 	
-	//pulls optimal moves an	d uses tie to decide which detective gets ahead.  
+	//pulls optimal moves and uses tie to decide which detective gets ahead.  
 	//this needs the tree node vetor to show the potential X locations. 
 	//the stations that rep the board. 
 	void DetectiveStrategy::detectiveGreedyMove(vector<TreeNode> potentialMrXLocations, vector<Station> board) {
