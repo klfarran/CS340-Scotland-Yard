@@ -15,10 +15,10 @@
 using namespace std;
 
 
-	//helper function which returns true if the Station 'chosen' is present in the list of Stations 'drawn', false if not
-	bool contains(vector<Station> drawn, Station chosen) {
+	//helper function which returns true if the Station number'chosen' is present in the list of Station numbers 'drawn', false if not
+	bool contains(vector<int> drawn, int chosen) {
 		for(int i = 0; i < drawn.size(); i++) {
-			if(drawn[i].equals(chosen))
+			if(drawn[i] == chosen)
 				return true;
 		}
 		
@@ -26,11 +26,11 @@ using namespace std;
 		return false;
 	}
 	
-	//helper function to pick a random station from possibleStarts, the vector of possible start stations, making sure that that 
-	//station has not already been drawn/ chosen for another player to start at
-	Station draw(vector<Station> possibleStarts, vector<Station>& drawn) {
+	//helper function to pick a random station number from possibleStarts, the vector of possible start station numbers, making sure that that 
+	//station number has not already been drawn/ chosen for another player to start at
+	int draw(vector<int> possibleStarts, vector<int>& drawn) {
 			int random = rand() %18; //random number between 0 and 17
-			Station chosen = possibleStarts[random];
+			int chosen = possibleStarts[random];
 		while(contains(drawn, chosen)) {
 			srand(time(0)); //seed random number generator using current time(required to not get the same sequence of random numbers)
 			random = rand() %18; //new random number between 0 and 17
@@ -50,58 +50,39 @@ int main() {
 	
 	//initialize all possible start stations
 	//these numbers are from the 18 starting position cards from the game 
-	//each one is the station number MINUS ONE, because the stations start with station number 1, so 
-	//board[0] is the station with station number 1, board[1] station with station number 2,...
-	vector<Station> possibleStarts;
-	possibleStarts.push_back(board[13-1]);
-	possibleStarts.push_back(board[26-1]);
-	possibleStarts.push_back(board[29-1]);
-	possibleStarts.push_back(board[34-1]);
-	possibleStarts.push_back(board[50-1]);
-	possibleStarts.push_back(board[53-1]);
-	possibleStarts.push_back(board[91-1]);
-	possibleStarts.push_back(board[94-1]);
-	possibleStarts.push_back(board[103-1]);
-	possibleStarts.push_back(board[112-1]);
-	possibleStarts.push_back(board[117-1]);
-	possibleStarts.push_back(board[132-1]);
-	possibleStarts.push_back(board[138-1]);
-	possibleStarts.push_back(board[141-1]);
-	possibleStarts.push_back(board[155-1]);
-	possibleStarts.push_back(board[174-1]);
-	possibleStarts.push_back(board[197-1]);
-	possibleStarts.push_back(board[198-1]);
 
+	vector<int> possibleStarts = {13, 26, 29, 34, 50, 53, 91, 94, 103, 112, 117, 132, 138, 141, 155, 174, 197, 198};
+	
 
-	vector<Station> drawn; //keeps track of the start stations which already have players placed on them/ have already been 'drawn'/ chosen
+	vector<int> drawn; //keeps track of the start stations which already have players placed on them/ have already been 'drawn'/ chosen
 							//so that we don't start another player at the same station as someone else 
 	
 	//initialize mrX
-	Station xStartStation = draw(possibleStarts, drawn); //get startStation from "drawing a card"
-	Player mrX(true, &xStartStation);
+	int xStartStation = draw(possibleStarts, drawn); //get start Station number from "drawing a card"
+	Player mrX(true, &board[xStartStation -1]);
 	
 	
 	//initialize detectives (there are 5)
 	vector<Player> detectives;
 
-	Station d1StartStation = draw(possibleStarts, drawn);
-	Player detective1(false, &d1StartStation);
+	int d1StartStation = draw(possibleStarts, drawn);
+	Player detective1(false, &board[d1StartStation -1]);
 	detectives.push_back(detective1);
 	
-	Station d2StartStation = draw(possibleStarts, drawn);
-	Player detective2(false, &d2StartStation);
+	int d2StartStation = draw(possibleStarts, drawn);
+	Player detective2(false, &board[d2StartStation -1]);
 	detectives.push_back(detective2);
 	
-	Station d3StartStation = draw(possibleStarts, drawn);
-	Player detective3(false, &d3StartStation);
+	int d3StartStation = draw(possibleStarts, drawn);
+	Player detective3(false, &board[d3StartStation -1]);
 	detectives.push_back(detective3);
 	
-	Station d4StartStation = draw(possibleStarts, drawn);
-	Player detective4(false, &d4StartStation);
+	int d4StartStation = draw(possibleStarts, drawn);
+	Player detective4(false, &board[d4StartStation -1]);
 	detectives.push_back(detective4);
 	
-	Station d5StartStation = draw(possibleStarts, drawn);
-	Player detective5(false, &d5StartStation);
+	int d5StartStation = draw(possibleStarts, drawn);
+	Player detective5(false, &board[d5StartStation -1]);
 	detectives.push_back(detective5);
 	
 	

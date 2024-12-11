@@ -15,8 +15,8 @@
 
 	//constructor	
 	GameManager::GameManager(){
-		//game has to start on round 0, can't start game in middle of rounds
-		round = 0; 
+		//game has to start on round 1, can't start game in middle of rounds
+		round = 1; 
 	}
 
 	//function to return the number of the current round of the game 
@@ -116,7 +116,7 @@
     	while (!gameOver) {
         
 			// Display current round
-			cout << "Round " << round << " begins!" << endl;
+			cout << "\nRound " << round << " begins!" << endl;
 
 			// Mr. X's turn
 			cout << "Mr. X's turn!" << endl;
@@ -187,7 +187,7 @@
 				int chosenStation, chosenTransport;
 				cout << "Enter the destination station number: ";
 				cin >> chosenStation;
-				
+				cout << "Mrx location currently: " << mrX.getCurrentStation()->getStationNum() << endl;
 				//print available transportation methods for user 
 				vector<int> availTransportTypes = mrX.getCurrentStation()->getAllTransportTypesTo(board[chosenStation-1]);
 				cout << "Available modes of transportation: ";
@@ -195,7 +195,7 @@
 				
 				cout << "Enter the desired transport type (1: Taxi, 2: Bus, 3: Subway, 4: Black Ticket): ";
 				cin >> chosenTransport;
-
+				
 				// Move Mr. X if possible
 				if (mrX.canMove(chosenTransport)) {
 					mrX.move(&board[chosenStation - 1], chosenTransport, mrX);
@@ -215,17 +215,22 @@
 			cout << "Detectives' turn!" << endl;
 
 			int detectiveNum = 1;
-			for (auto& detective : detectives) {
-				cout << "Detective #" << detectiveNum << " at station " << detective.getCurrentStation()->getStationNum() << " is moving..." << endl;
-
+			for (int i = 0; i < detectives.size(); i++) {
+				cout << "Detective #" << detectiveNum << " at station " << detectives[i].getCurrentStation()->getStationNum() << " is moving..." << endl;
+				int stationNum = detectives[i].getCurrentStation()->getStationNum();
 				// Detective chooses optimal solution based on shortest path to potential Mr X location
-				Station nextStation = detectiveStrategy.chooseOptimalDetectiveMove(detective, getDetectiveLocations(detectives), possibleMrXLocations, board);
-				
-				vector<int> transportTypes = detective.getCurrentStation()->getAllTransportTypesTo(nextStation);
+				//Station nextStation = detectiveStrategy.chooseOptimalDetectiveMove(detectives[i], getDetectiveLocations(detectives), possibleMrXLocations, board);
+				Station nextStation (detectiveStrategy.chooseOptimalDetectiveMove(detectives[i], getDetectiveLocations(detectives), possibleMrXLocations, board));
+				cout << "destination station: " <<nextStation.getStationNum() << " " << endl; 
+				//cout << "optimal station: " << nextStation.getStationNum() << endl;
+				detectives[i].setCurrentStation(&board[stationNum-1]);
+				//cout << "Detective #" << detectiveNum << " at station " << detectives[i].getCurrentStation()->getStationNum() << " is moving..." << endl;
+
+				vector<int> transportTypes = detectives[i].getCurrentStation()->getAllTransportTypesTo(nextStation);
 				
 				//for debugging, delete later 
-				/*
-				cout << "destination station: " <<nextStation.getStationNum() << " " << endl; 
+				//cout << "current station: " << detectives[i].getCurrentStation()->getStationNum() << endl;
+				
 				
 				
 				cout << "transport types: ";
@@ -233,9 +238,9 @@
 					cout << transportTypes[k] << " ";
 				}
 				cout << endl;
-				*/
+				
 				// Just choose the first transport type for now
-				detective.move(&nextStation, transportTypes[0], mrX);
+				detectives[i].move(&nextStation, transportTypes[0], mrX);
 
 				detectiveNum++;
 			}
@@ -288,14 +293,14 @@
 		possibleMrXLocations.getLeaves(possibleMrXLocations, leaves); //updates leaves vector to contain all leaves from tree rooted at possibleMrXLocations
 		
 		if(leaves[0].getStation().getStationNum() != -1) { //its not round 1 or 2, so build next level of tree given mrX's possible location(s)
-			for(TreeNode leaf : leaves) {
+			for(int j = 0; j < leaves.size(); j++) {
 				vector<TreeNode> children;
-				vector<int> adjacentStationNumbers = leaf.getStation().getAllAdjacentStations(getDetectiveLocations(detectives), mrX.getTaxiTickets(), mrX.getBusTickets(), mrX.getSubwayTickets());
+				vector<int> adjacentStationNumbers = leaves[j].getStation().getAllAdjacentStations(getDetectiveLocations(detectives), mrX.getTaxiTickets(), mrX.getBusTickets(), mrX.getSubwayTickets());
 				for(int i = 0; i < adjacentStationNumbers.size(); i++) {
 					TreeNode child(board[adjacentStationNumbers[i-1]], childrensChildren); //remember board starts at 0, station numbers start at 1
 					children.push_back(child);
 				}	
-				leaf.setChildren(children);
+				leaves[j].setChildren(children);
 			 }
 	    }
 	}
@@ -303,6 +308,7 @@
 	//prints out in one line the available transport types according to the transport types found in 
 	//incoming vector availTransportTypes
 	void GameManager::printAvailalbeTransportTypes(vector<int> availTransportTypes) {
+		
 		string answer = "";
 		bool hasTaxi = false; 
 		bool hasBus = false;
