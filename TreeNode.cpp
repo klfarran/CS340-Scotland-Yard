@@ -7,7 +7,7 @@ using namespace std;
 
 	//Constructors
 	//Explicit constructor 
-	TreeNode::TreeNode(Station inStation, vector<TreeNode> inChildren) {
+	TreeNode::TreeNode(int inStation, vector<TreeNode> inChildren) {
 		station = inStation;
 		children = inChildren;
 	}
@@ -18,10 +18,7 @@ using namespace std;
 		//possible for us to have an 'empty tree' (we have no Tree class, just TreeNode class, and we can't pass around 
 		//a non-existent TreeNode, so this is how we'll represent an 'empty tree')
 		//for rounds 1,2 this will be our entire possibleMrXLocations tree
-		vector<Edge> edges;
-		Station s (-1, edges);
-		station = s;
-		children = {};
+		station = -1;
 	}
 
 	//Getters
@@ -37,7 +34,7 @@ using namespace std;
 	  return children[stationNumber];
 	}
 	
-		Station TreeNode::getStation() const{
+	int TreeNode::getStation() const{
 	  return station;
 	}
 	
@@ -54,15 +51,15 @@ using namespace std;
 	
 	
 	//Setters
-		void TreeNode::setChildren(vector<TreeNode> inChildren) {
+	void TreeNode::setChildren(vector<TreeNode> inChildren) {
 		children = inChildren;
 	}
 	
-		void TreeNode::setChild(int pos, TreeNode T){
+	void TreeNode::setChild(int pos, TreeNode T){
 	  children[pos] = T;
 	}
 	
-	void TreeNode::setStation(Station newStation){
+	void TreeNode::setStation(int newStation){
 	  station = newStation;
 	}
 
@@ -74,10 +71,10 @@ using namespace std;
 
 
 	void TreeNode::printNode() {
-		cout << "Station number of node: " << station.getStationNum() << endl;
+		cout << "Station number of node: " << station << endl;
 		cout << "Station numbers of child nodes: " << endl;
 		for (int i = 0; i < children.size(); i++) {
-			cout << children[i].getStation().getStationNum() << " ";
+			cout << children[i].getStation() << " ";
 		}
 	}
 	
