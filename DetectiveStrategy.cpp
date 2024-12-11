@@ -44,7 +44,7 @@
 		int taxiTix = detective.getTaxiTickets();
 		int busTix = detective.getBusTickets();
 		int subwayTix = detective.getSubwayTickets();
-
+		
 		// Find shortest path!
 		for(int i = 0; i < totalStations; i++){
 			// Find unvisited station with the shortest distance
@@ -56,7 +56,7 @@
 					currStation = j;
 				}
 			}
-
+cout << i << " round of for loop in shortestPath" << endl;
 			// All reachable stations have been visited
 			if(currStation == -1)
 				break;
@@ -115,18 +115,19 @@
 			//leaves of the tree of potential mrX locations are the current potential mrx locations- get them 
 		vector<TreeNode> locations; 
 		potentialMrXLocations.getLeaves(potentialMrXLocations, locations); //locations is updated by reference to contain the leaves 
+		//debugging:
+		/*
 		cout << "root: " << potentialMrXLocations.getStation() << endl;
 		cout << "printing leaves only: " << potentialMrXLocations.getNumChildren() << endl;
 		for (int i = 0; i < locations.size(); i++){
 		 	cout << locations[i].getStation() << " ";
 		}
 		cout << endl;
-
+		*/
 		if(locations[0].getStation() == -1) {//its round 1 or 2, and our tree is "empty" 
 			//move to a spot on the board that is optimal for being able to move 'anywhere' 
 			//this Station has to be a valid move from where the detective is, so get all valid next stations: 
 			vector<int> adjacents = board[detective.getCurrentStation()-1].getAllAdjacentStations(detectiveLocations, detective.getTaxiTickets(), detective.getBusTickets(), detective.getSubwayTickets());
-			cout << "in empty tree case" << endl;
 			return optimalBlindMove(adjacents, board);
 		}
 		  else { //carry on normally 
