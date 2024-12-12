@@ -290,7 +290,7 @@
 					
 					if(round == 3 || round == 8 || round == 13 || round == 18) //or first half of a double move,...
 						possibleMrXLocations = Build_Tree(mrX.getCurrentStation(), board, mrX, detectives);	
-					else 
+					else  
 						AddNextPossibleMrXLocations(possibleMrXLocations, board, mrX, detectives);
 					
 				} else {
@@ -373,12 +373,11 @@
 	}
 
 
-	void GameManager::AddNextPossibleMrXLocations(TreeNode possibleMrXLocations, vector<Station>& board, Player& mrX, vector<Player>& detectives) {
+	void GameManager::AddNextPossibleMrXLocations(TreeNode& possibleMrXLocations, vector<Station>& board, Player& mrX, vector<Player>& detectives) {
 	//improve after finishing to add pruning
 		//go to every leaf of the tree and add all possible next stations as children of each 
+		
 		vector<TreeNode> leaves; 
-		vector<TreeNode> childrensChildren = {};
-
 		possibleMrXLocations.getLeaves(possibleMrXLocations, leaves); //updates leaves vector to contain all leaves from tree rooted at possibleMrXLocations
 		
 		if(leaves[0].getStation() != -1) { //its not round 1 or 2, so build next level of tree given mrX's possible location(s)
@@ -386,12 +385,27 @@
 				vector<TreeNode> children;
 				vector<int> adjacentStationNumbers = board[leaves[j].getStation()-1].getAllAdjacentStations(getDetectiveLocations(detectives), mrX.getTaxiTickets(), mrX.getBusTickets(), mrX.getSubwayTickets());
 				for(int i = 0; i < adjacentStationNumbers.size(); i++) {
-					TreeNode child(adjacentStationNumbers[i], childrensChildren); 
+					TreeNode child(adjacentStationNumbers[i], {}); 
 					children.push_back(child);
 				}	
 				leaves[j].setChildren(children);
 			 }
 	    }
+		
+	 /* debugging
+		cout << "curroot: " << possibleMrXLocations.getStation() << endl;
+
+		cout << "printing out leaves: " << endl;
+		for (int i = 0; i < leaves.size(); i++) {
+			cout << "leaf number: " << leaves[i].getStation() << ", children: ";
+				vector<TreeNode> children = leaves[i].getChildren();
+				for (int j = 0; j < children.size(); j++) {
+					cout << children[j].getStation() << " ";
+				}
+		}
+		cout << endl;
+		possibleMrXLocations.setChildren(leaves);
+		*/
 	}
 
 	//prints out in one line the available transport types according to the transport types found in 

@@ -101,7 +101,7 @@
 		vector<TreeNode> locations; 
 		potentialMrXLocations.getLeaves(potentialMrXLocations, locations); //locations is updated by reference to contain the leaves 
 		//debugging:
-		/*
+		/* debugging
 		cout << "root: " << potentialMrXLocations.getStation() << endl;
 		cout << "printing leaves only: " << potentialMrXLocations.getNumChildren() << endl;
 		for (int i = 0; i < locations.size(); i++){
@@ -131,13 +131,15 @@
 				}
 			}
 			
-			/*
+			
 			// debugging
+			/*
+			cout << "shortest path: " << endl;
 			for(int i = 0; i < curPath.size(); i++){
-				cout << curPath[i] << endl;
+				cout << curPath[i] << " ";
 			}
-			*/
-
+			cout << endl;
+*/
 			return curPath[1];
 		}
 	}
