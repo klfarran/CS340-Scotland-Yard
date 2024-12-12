@@ -143,7 +143,7 @@
 	}
 	
 	void DetectiveStrategy::detectiveGreedyMove(vector<TreeNode> potentialMrXLocations, vector<Station> board) {
-		/*
+		
 	//need to hold all of the stations that a detective goes to
 	vector<int> detectiveDestinations(detectives.size());
 		
