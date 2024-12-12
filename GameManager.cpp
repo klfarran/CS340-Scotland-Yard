@@ -228,8 +228,8 @@
 				//on double move and a qualifying round (3, 8, ...), mrX reveals his location here, before the second half of the double move, so build new tree: 
 				if(round == 3 || round == 8 || round == 13 || round == 18) 
 					possibleMrXLocations = Build_Tree(firstStation, board, mrX, detectives);	
-					else  
-						AddNextPossibleMrXLocations(possibleMrXLocations, board, mrX, detectives);				
+				else  
+					AddNextPossibleMrXLocations(possibleMrXLocations, board, mrX, detectives);				
 				
 				// Ask for the transport type and destination for Mr. X's double move
 				int doubleStation, doubleTransport;
@@ -345,7 +345,7 @@
 				// Keep track of next station
 				int nextStation;
 
-				nextStation = detectiveStrategy.chooseOptimalDetectiveMove(detectives[i], getDetectiveLocations(detectives), possibleMrXLocations, board, optimalPath);
+				nextStation = detectiveStrategy.chooseOptimalDetectiveMove(detectives[i], round, getDetectiveLocations(detectives), possibleMrXLocations, subwayStations, board, optimalPath);
 				
 				// If optimalPath requires more moves than moves until Mr X's next appearance,
 				// detective will try to move to a subway station instead
@@ -428,7 +428,7 @@
 			 }
 	    }
 		
-	  /*debugging */
+	  /*debugging 
 		cout << "curroot: " << possibleMrXLocations.getStation() << endl;
 
 		cout << "printing out leaves: " << endl;
@@ -440,6 +440,7 @@
 				}
 		}
 		cout << endl;
+		*/
 		possibleMrXLocations.setChildren(leaves);
 		
 	}
