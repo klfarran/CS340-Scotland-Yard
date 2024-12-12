@@ -142,7 +142,12 @@
 			}
 			*/
 			optimalPath = curPath; //set reference parameter to be able to access this path from GameManager
-
+			
+			if(contains(detectiveLocations, curPath[1])) {//location is already occupied, we can't go there, so dont go there, go to an adjacent station instead (fail safe)
+				vector<int> adjacents = board[detective.getCurrentStation()-1].getAllAdjacentStations(detectiveLocations, detective.getTaxiTickets(), detective.getBusTickets(), detective.getSubwayTickets());
+				return optimalBlindMove(detective, round, detectiveLocations, adjacents, subwayStations, board);
+			}
+	
 			return curPath[1];
 		}
 	}

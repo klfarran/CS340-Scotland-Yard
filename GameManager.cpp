@@ -359,13 +359,7 @@
 
 				// Keep track of next station
 				int nextStation;
-				/*
-			cout << "locations on chooseOPtimal: ";
-		for (int z = 0; z < getDetectiveLocations(detectives).size(); z++) {
-			cout << getDetectiveLocations(detectives)[z] << " ";
-		}
-cout << endl;
-*/
+
 				nextStation = detectiveStrategy.chooseOptimalDetectiveMove(detectives[i], round, getDetectiveLocations(detectives), possibleMrXLocations, subwayStations, board, optimalPath);
 				
 				// If optimalPath requires more moves than moves until Mr X's next appearance,
@@ -373,7 +367,9 @@ cout << endl;
 				if(optimalPath.size() > movesUntilAppearance){
 					cout << "choosing subway path instead" << endl;
 					vector<int> subwayPath = detectiveStrategy.pathToClosestSubway(detectives[i], movesUntilAppearance, subwayStations, board);
-					nextStation = subwayPath[1];
+					if(!containsNum(getDetectiveLocations(detectives), subwayPath[1])) //check that this station is not occupied
+						nextStation = subwayPath[1];
+					
 				}
 
 				//detectives[i].setCurrentStation(stationNum);
