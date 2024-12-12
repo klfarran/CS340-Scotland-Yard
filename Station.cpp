@@ -103,7 +103,6 @@
 		vector<int> transportTypes;
 		vector<Edge> edges = getEdges();
 		for (Edge edge : edges) {
-			//edge.display();
 			if (edge.getPointB() == adjacent.getStationNum()) {
 				transportTypes.push_back(edge.getTransport());
 			}

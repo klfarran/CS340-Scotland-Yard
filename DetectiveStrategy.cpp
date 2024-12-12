@@ -343,15 +343,13 @@
 		//is it round 1 and can we reach a subway station in two moves? 
 		if(round == 1) {
 			for(int i = 0; i < adjacents.size(); i++) { //for each adjacent station, get its adjacent stations, and if any of those are subway stations, return the first station in that path to get us on that path 
-				cout << "adjacent #: " << adjacents[i] << " ";
 				vector<int> adjacentsAdjacents = board[adjacents[i]-1].getAllAdjacentStations(detectiveLocations, detective.getTaxiTickets(), detective.getBusTickets(), detective.getSubwayTickets()); //not worth updating tickets, cause its round 1, so its impossible to run out 
-				cout << "adjs adjs: ";
+				
 				for (int j = 0; j < adjacentsAdjacents.size(); j++) {
-					cout << adjacentsAdjacents[j] << " ";
 					if(contains(subwayStations, adjacentsAdjacents[j]))
 						return adjacents[i];
 				}
-				cout << endl;				
+			
 			}
 		}
 				
