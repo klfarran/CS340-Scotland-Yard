@@ -57,16 +57,16 @@
 	vector<int>Station::getAllAdjacentStations(vector<int> locations, int taxiTickets, int busTickets, int undTickets) {
 		vector<int> adjacents;
 		bool isOpen;
-
+	
 		//for each edge of this station (that connects to a neighbor station)
 		for(int i = 0; i < edges.size(); i++) {
 			isOpen = true; //for each destination station, we start by assuming that its "open" (there are no detectives already there)
 			//for each station that a detective currently occupies 
 			for(int j = 0; j < locations.size(); j++) {
+				
 				if(locations[j] == edges[i].getPointB()) //if there is a detective at this possible destination station, its not "open" to be moved to 
 					isOpen = false; //so this station is not "open"
 			}
-			
 			if(isOpen) { //this next station is not currently occupied by any player 
 				//check to see if we have a ticket to get there 
 				int transport = edges[i].getTransport();

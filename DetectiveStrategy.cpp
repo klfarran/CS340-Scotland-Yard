@@ -141,7 +141,7 @@
 				cout << curPath[i] << " ";
 			}
 			*/
-			optimalPath = curPath;
+			optimalPath = curPath; //set reference parameter to be able to access this path from GameManager
 
 			return curPath[1];
 		}
