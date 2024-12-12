@@ -21,15 +21,16 @@ public:
 
     // Methods
 	vector<int> shortestPath(Player detective, int start, int end, vector<Station> board);
-	int chooseOptimalDetectiveMove(Player detective, vector<int> detectiveLocations, TreeNode potentialMrXLocations, vector<Station> board, vector<int> optimalPath);
+	int chooseOptimalDetectiveMove(Player detective, int round, vector<int> detectiveLocations, TreeNode potentialMrXLocations, vector<int> subwayStations, vector<Station> board, vector<int> optimalPath);
 	Station breakTie(vector<Station> destinations);
 	void detectiveGreedyMove(vector<TreeNode> potentialMrXLocations, vector<Station> board);
 	vector<int> pathToClosestSubway(Player detective, int moves, vector<int> subwayStations, vector<Station> board);
 	vector<vector<Station>> getReachableStations(vector<Player>& detectives, int movesUntilReveal, vector<Station>& board);
 	int distanceToPotentialMrX();
 	int chooseBestTicket(Player detective, vector<int> availableTransports);
-	int optimalBlindMove(Player detective, vector<int> adjacents, vector<Station> board);
+	int optimalBlindMove(Player detective, int round, vector<int> detectiveLocations, vector<int> adjacents, vector<int> subwayStations, vector<Station> board);
 	void updateDetectives(vector<Player> inDetectives);
+	bool contains(vector<int> stations, int station);
 	
 };
 

@@ -96,7 +96,7 @@
 	
 	//Uses shortestPath and loops through mr. x’s potential locations and 
 	//selects the location with the minimal distance for the detective 'detective'
-	int DetectiveStrategy::chooseOptimalDetectiveMove(Player detective, vector<int> detectiveLocations, TreeNode potentialMrXLocations, vector<Station> board, vector<int> optimalPath) {
+	int DetectiveStrategy::chooseOptimalDetectiveMove(Player detective, int round, vector<int> detectiveLocations, TreeNode potentialMrXLocations, vector<int> subwayStations, vector<Station> board, vector<int> optimalPath) {
 		//leaves of the tree of potential mrX locations are the current potential mrx locations- get them 
 		vector<TreeNode> locations; 
 		potentialMrXLocations.getLeaves(potentialMrXLocations, locations); //locations is updated by reference to contain the leaves 
@@ -116,7 +116,7 @@
 			
 			//this Station has to be a valid move from where the detective is, so get all valid next stations: 
 			vector<int> adjacents = board[detective.getCurrentStation()-1].getAllAdjacentStations(detectiveLocations, detective.getTaxiTickets(), detective.getBusTickets(), detective.getSubwayTickets());
-			return optimalBlindMove(detective, adjacents, board);
+			return optimalBlindMove(detective, round, detectiveLocations, adjacents, subwayStations, board);
 		}
 		else { //we have a tree of possibleMrX locations because mrX has revealed his location at least once 
 			int shortestPathLen = INT_MAX; //current shortest path found
@@ -327,18 +327,43 @@
 		return 0;
 	}
 	
+	bool DetectiveStrategy::contains(vector<int> stations, int station) {
+		for(int i = 0; i < stations.size(); i++) {
+			if(stations[i] == station)
+				return true;
+		}
+		return false;
+	}
+	
 	//takes a vector of station numbers which are the currently reachable stations of the current detective and 
 	//if an underground station is reachable as a next station, return that station (go there)
-	//if we are at an undergound station, stay there (want to stay here until mrX is revealed), else
 	//returns the station which has the most edges to other stations (has the most access to other stations)
-	int DetectiveStrategy::optimalBlindMove(Player detective, vector<int> adjacents, vector<Station> board) {
+	int DetectiveStrategy::optimalBlindMove(Player detective, int round, vector<int> detectiveLocations, vector<int> adjacents, vector<int> subwayStations, vector<Station> board) {
 		
-		//are we at an underground station already? stay there/return it: 
-		//vector<board[detective.getCurrentStation()-].getEdges();
-		
-		//is one of our adjacent stations an underground station? is so, return it
-		// ...
-		
+		//is it round 1 and can we reach a subway station in two moves? 
+		if(round == 1) {
+			for(int i = 0; i < adjacents.size(); i++) { //for each adjacent station, get its adjacent stations, and if any of those are subway stations, return the first station in that path to get us on that path 
+				cout << "adjacent #: " << adjacents[i] << " ";
+				vector<int> adjacentsAdjacents = board[adjacents[i]-1].getAllAdjacentStations(detectiveLocations, detective.getTaxiTickets(), detective.getBusTickets(), detective.getSubwayTickets()); //not worth updating tickets, cause its round 1, so its impossible to run out 
+				cout << "adjs adjs: ";
+				for (int j = 0; j < adjacentsAdjacents.size(); j++) {
+					cout << adjacentsAdjacents[j] << " ";
+					if(contains(subwayStations, adjacentsAdjacents[j]))
+						return adjacents[i];
+				}
+				cout << endl;				
+			}
+		}
+				
+		//is it round 2 and one of our adjacent stations is an underground station? is so, return it
+		if(round == 2) {
+			for (int i = 0; i < adjacents.size(); i++) {
+				if(contains(subwayStations, adjacents[i]))
+					return adjacents[i];
+			}
+		}
+
+		//else, choose adjacent station with the most edges coming out of it
 		//start by setting optimal to be the first adjacent station
 		int optimal = adjacents[0];
 		
