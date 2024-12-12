@@ -364,7 +364,12 @@
 				detectives[i].move(nextStation, transportTypes[0], mrX);
 				
 				//show where the detective moved (we'd be able to see this on the board)
-				cout << "Detective #" << detectiveNum << " moved to station " << nextStation << " \n" << endl; 
+				cout << "Detective #" << detectiveNum << " moved to station " << detectives[i].getCurrentStation() << " \n" << endl; 
+				
+				if(detectives[i].getCurrentStation() == mrX.getCurrentStation()) {
+					cout << "Detective # " << detectiveNum << "has caught Mr. X!! The detectives win!" << endl;
+					gameOver = true;
+				}	
 				
 				detectiveNum++;
 			}
