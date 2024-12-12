@@ -352,14 +352,15 @@
 				// If optimalPath requires more moves than moves until Mr X's next appearance,
 				// detective will try to move to a subway station instead
 				if(optimalPath.size() > movesUntilAppearance){
+					cout << "choosing subway path instead" << endl;
 					vector<int> subwayPath = detectiveStrategy.pathToClosestSubway(detectives[i], movesUntilAppearance, subwayStations, board);
 					nextStation = subwayPath[1];
 				}
 
-				detectives[i].setCurrentStation(stationNum);
+				//detectives[i].setCurrentStation(stationNum);
 				
 				vector<int> transportTypes = board[detectives[i].getCurrentStation()-1].getAllTransportTypesTo(board[nextStation-1]);
-				
+				cout << "next move chosen: " << nextStation << endl;
 				// Just choose the first transport type for now
 				detectives[i].move(nextStation, transportTypes[0], mrX);
 				
@@ -367,8 +368,9 @@
 				cout << "Detective #" << detectiveNum << " moved to station " << detectives[i].getCurrentStation() << " \n" << endl; 
 				
 				if(detectives[i].getCurrentStation() == mrX.getCurrentStation()) {
-					cout << "Detective # " << detectiveNum << "has caught Mr. X!! The detectives win!" << endl;
+					cout << "Detective # " << detectiveNum << " has caught Mr. X!! The detectives win!" << endl;
 					gameOver = true;
+					break; //out of detective for loop 
 				}	
 				
 				detectiveNum++;
@@ -436,19 +438,6 @@
 			 }
 	    }
 		
-	  /*debugging 
-		cout << "curroot: " << possibleMrXLocations.getStation() << endl;
-
-		cout << "printing out leaves: " << endl;
-		for (int i = 0; i < leaves.size(); i++) {
-			cout << "leaf number: " << leaves[i].getStation() << ", children: ";
-				vector<TreeNode> children = leaves[i].getChildren();
-				for (int j = 0; j < children.size(); j++) {
-					cout << children[j].getStation() << " ";
-				}
-		}
-		cout << endl;
-		*/
 		possibleMrXLocations.setChildren(leaves);
 		
 	}

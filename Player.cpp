@@ -1,4 +1,6 @@
 #include "Player.h"
+#include <iostream>
+using namespace std;
 
 // Constructor
 Player::Player(bool isMrX, int startStation) {
@@ -103,17 +105,19 @@ bool Player::canMove(int transportType) const {
     switch (transportType) {
         case 1: return taxiTickets > 0;
         case 2: return busTickets > 0;
-        case 3: return subwayTickets > 0;
-        case 4: return blackTickets > 0 && isMrX;
+        case 3: return taxiTickets > 0 || busTickets > 0;
+        case 4: return subwayTickets > 0;
+		case 6: return busTickets > 0 || subwayTickets > 0;
+		case 8: return blackTickets > 0 && isMrX;
         default: return false;
     }
 }
 
 // Move the player and deduct tickets, add used ticket to Mr. X's inventory if player is a detective
 void Player::move(int destination, int transportType, Player& mrX) {
-    if (canMove(transportType)) {
+   if (canMove(transportType)) {
         currentStation = destination;
-
+		
         // Deduct tickets based on transport type and add the used ticket to Mr. X's inventory
         switch (transportType) {
             case 1:
