@@ -55,7 +55,7 @@ int main() {
 	
 
 	vector<int> drawn; //keeps track of the start stations which already have players placed on them/ have already been 'drawn'/ chosen
-							//so that we don't start another player at the same station as someone else 
+						//so that we don't start another player at the same station as someone else 
 	
 	//initialize mrX
     //get start Station number from "drawing a card"
