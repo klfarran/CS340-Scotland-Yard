@@ -216,10 +216,100 @@
 			return shortestPath;
 	}
 	
-	vector<Station> DetectiveStrategy::getReachableStations(Station start, int movesRemaining) {
-		//Return all stations a detective can reach in a certain number of moves, like pathToClosestSubway but more general
-		vector<Station> stations;
-		return stations;
+	// For each detective, returns a vector of reachable stations they could get to in a certain amount of moves
+	vector<vector<Station>> DetectiveStrategy::getReachableStations(vector<Player>& detectives, int movesUntilReveal, vector<Station>& board) {
+    	vector<vector<Station>> allDetectiveStations;
+
+		//going through each detective from players
+		for (Player& detective : detectives) {
+			vector<Station> reachableStations;
+
+			int taxiTix = detective.getTaxiTickets();
+			int busTix = detective.getBusTickets();
+			int subwayTix = detective.getSubwayTickets();
+
+			// Perform DFS for the current detective
+			performDFS(detective.getCurrentStation(), movesUntilReveal, board, taxiTix, busTix, subwayTix, reachableStations);
+
+			allDetectiveStations.push_back(reachableStations);
+		}
+
+		return allDetectiveStations;
+	}
+
+	
+
+	void DetectiveStrategy::dfsHelper(int currentStationNum, int movesLeft, vector<bool>& visited, vector<Station>& reachableStations,
+               vector<Station>& board, int& taxiTix, int& busTix, int& subwayTix) {
+		//mark current staion as visted and add it to reach vector
+		visited[currentStationNum - 1] = true;
+		reachableStations.push_back(board[currentStationNum - 1]);
+
+		//end recursion if no moves are left
+		if (movesLeft <= 0) {
+			return;
+		}
+
+		vector<int> adjacents;
+		//get the current station local 
+		Station& currentStation = board[currentStationNum - 1];
+		//what stations are reachable based on tickets
+		adjacents = currentStation.getAllAdjacentStations(
+			{},        // No other detectives to consider
+			taxiTix,   //  taxi tickets
+			busTix,    //  bus tickets
+			subwayTix  // subway tickets
+		);
+		
+		for (int adj : adjacents) {
+			//if the adjacent station has not beeen visited yet then 
+			if (!visited[adj - 1]) {
+				//get the current ways to travel depednng o n the current station
+				vector<int> transportTypes = currentStation.getAllTransportTypesTo(board[adj - 1]);
+				bool canProceed = false;
+
+				for (int transport : transportTypes) {
+					//check if a ticket can be used and then take thatused ticket away
+					if (transport == 1 && taxiTix > 0) {
+						taxiTix--;
+						canProceed = true;
+					} else if (transport == 2 && busTix > 0) {
+						busTix--;
+						canProceed = true;
+					} else if (transport == 4 && subwayTix > 0) {
+						subwayTix--;
+						canProceed = true;
+					}
+
+					if (canProceed) {
+						//moves left goes down by one in this call of helper
+						dfsHelper(adj, movesLeft - 1, visited, reachableStations, board, taxiTix, busTix, subwayTix);
+
+						//putting the tickets back for estimating the next reahcbale move 
+						if (transport == 1) taxiTix++;
+						if (transport == 2) busTix++;
+						if (transport == 4) subwayTix++;
+						//when a valid tranportion type is chosen leve theis loop with break
+						break;
+					}
+				}
+        	}
+    	}
+	}
+	
+	void DetectiveStrategy::performDFS(int startStation, int moves, vector<Station>& board, int taxiTix, int busTix, int subwayTix,
+		vector<Station>& reachableStations) {
+		
+		// create the vector of visited stations (false for all stations so they are makred unvisited befoe the helper is called)
+		vector<bool> visited(board.size(), false);
+
+		//  helper function starting at the start station
+		dfsHelper(startStation, moves, visited, reachableStations, board, taxiTix, busTix, subwayTix);
+	}
+	
+	int DetectiveStrategy::chooseBestTicket(Player detective, vector<int> availableTransports) {
+		//Returns highest priority transport types to a given station, like maybe we want to use buses first and save taxis and save subways
+		return 0;
 	}
 	
 	int DetectiveStrategy::distanceToPotentialMrX() {
