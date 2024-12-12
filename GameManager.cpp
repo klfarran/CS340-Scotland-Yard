@@ -160,7 +160,7 @@
 				movesUntilAppearance = 18 - round;
 			}
 			else if(round <= 24){
-				movesUntilAppearance = 18 - round;
+				movesUntilAppearance = 24 - round;
 			}
 
 			// Display current round
