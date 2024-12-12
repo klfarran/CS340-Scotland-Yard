@@ -20,7 +20,7 @@ class GameManager {
 		void gameLoop(Player& mrX, vector<Player>& detectives, vector<Station>& board);
 		vector<int> getDetectiveLocations(vector<Player> detectives);
 		TreeNode Build_Tree(int station, vector<Station>& board, Player& mrX, vector<Player> detectives);
-		void AddNextPossibleMrXLocations(TreeNode possibleMrXLocations, vector<Station>& board, Player& mrX, vector<Player>& detectives);
+		void AddNextPossibleMrXLocations(TreeNode& possibleMrXLocations, vector<Station>& board, Player& mrX, vector<Player>& detectives);
 		void printAvailalbeTransportTypes(vector<int> availTransportTypes);
 		
 	
