@@ -200,7 +200,13 @@
 					for (int stationNum : possibleSecondMoves) {
 						cout << stationNum << " ";
 					}
-				cout << endl;		
+				cout << endl;	
+
+				//on double move and a qualifying round (3, 8, ...), mrX reveals his location here, before the second half of the double move, so build new tree: 
+				if(round == 3 || round == 8 || round == 13 || round == 18) 
+					possibleMrXLocations = Build_Tree(firstStation, board, mrX, detectives);	
+					else  
+						AddNextPossibleMrXLocations(possibleMrXLocations, board, mrX, detectives);				
 				
 				// Ask for the transport type and destination for Mr. X's double move
 				int doubleStation, doubleTransport;
@@ -244,7 +250,10 @@
 					cout << "Mr. X used a double move and moved to station " << mrX.getCurrentStation() << endl;
 				} else {
 					cout << "Invalid move." << endl;
-				}							
+				}		
+				
+				//update possible moves tree now that the double move is completed: 
+				AddNextPossibleMrXLocations(possibleMrXLocations, board, mrX, detectives);						
 			}
 			else if (useDoubleMove == 'n'){
 				// Ask for the transport type and destination for Mr. X
@@ -288,7 +297,7 @@
 					mrX.move(chosenStation, chosenTransport, mrX);
 					cout << "Mr. X moved to station " << mrX.getCurrentStation() << endl;
 					
-					if(round == 3 || round == 8 || round == 13 || round == 18) //or first half of a double move,...
+					if(round == 3 || round == 8 || round == 13 || round == 18) 
 						possibleMrXLocations = Build_Tree(mrX.getCurrentStation(), board, mrX, detectives);	
 					else  
 						AddNextPossibleMrXLocations(possibleMrXLocations, board, mrX, detectives);
@@ -392,7 +401,7 @@
 			 }
 	    }
 		
-	 /* debugging
+	  /*debugging */
 		cout << "curroot: " << possibleMrXLocations.getStation() << endl;
 
 		cout << "printing out leaves: " << endl;
@@ -405,7 +414,7 @@
 		}
 		cout << endl;
 		possibleMrXLocations.setChildren(leaves);
-		*/
+		
 	}
 
 	//prints out in one line the available transport types according to the transport types found in 
