@@ -119,12 +119,35 @@
     	bool gameOver = false;
 		TreeNode possibleMrXLocations = TreeNode();
 
+		// Subway stations
+		vector<int> subwayStations = {1, 46, 74, 93, 79, 111, 163, 153, 140, 185, 159, 13, 67, 89};
+
 		//pass detectives to detective strategy class to initialize the detective strategy object 
 		DetectiveStrategy detectiveStrategy(detectives);
+
+		// Keep track of moves until Mr. X appears
+		int movesUntilAppearance = 0;
 
     	// Start the game loop
     	while (!gameOver) {
         
+			// movesUntilAppearance update
+			if(round <= 3){
+				movesUntilAppearance = 3 - round;
+			}
+			else if(round <= 8){
+				movesUntilAppearance = 8 - round;
+			}
+			else if(round <= 13){
+				movesUntilAppearance = 13 - round;
+			}
+			else if(round <= 18){
+				movesUntilAppearance = 18 - round;
+			}
+			else if(round <= 24){
+				movesUntilAppearance = 18 - round;
+			}
+
 			// Display current round
 			cout << "\nRound " << round << " begins!" << endl;
 
@@ -301,28 +324,32 @@
 			// Detectives' turn
 			cout << "\nDetectives' turn!" << endl;
 
+			// Keep track of optimalPath to determine whether to go with optimalDetectiveMove or closestSubway
+			vector<int> optimalPath;
+
 			int detectiveNum = 1;
 			for (int i = 0; i < detectives.size(); i++) {
 				cout << "Detective #" << detectiveNum << " at station " << detectives[i].getCurrentStation() << " is moving..." << endl;
 				int stationNum = detectives[i].getCurrentStation();
 				// Detective chooses optimal solution based on shortest path to potential Mr X location
-			
-				int nextStation = detectiveStrategy.chooseOptimalDetectiveMove(detectives[i], getDetectiveLocations(detectives), possibleMrXLocations, board);
-				cout << "destination station: " <<nextStation << " " << endl; 
+
+				// Keep track of next station
+				int nextStation;
+
+				nextStation = detectiveStrategy.chooseOptimalDetectiveMove(detectives[i], getDetectiveLocations(detectives), possibleMrXLocations, board, optimalPath);
+				
+				// If optimalPath requires more moves than moves until Mr X's next appearance,
+				// detective will try to move to a subway station instead
+				if(optimalPath.size() > movesUntilAppearance){
+					vector<int> subwayPath = detectiveStrategy.pathToClosestSubway(detectives[i], movesUntilAppearance, subwayStations, board);
+					nextStation = subwayPath[1];
+				}
+
+				cout << "destination station: " << nextStation << " " << endl; 
 
 				detectives[i].setCurrentStation(stationNum);
 				
 				vector<int> transportTypes = board[detectives[i].getCurrentStation()-1].getAllTransportTypesTo(board[nextStation-1]);
-
-				//for debugging, delete later 
-				// REASON FOR CRASH: choosing destination station that current station isnt connected to
-				cout << "current station: " << detectives[i].getCurrentStation() << endl;
-				
-				cout << "transport types: ";
-				for (int k = 0; k < transportTypes.size(); k++) {
-					cout << transportTypes[k] << " ";
-				}
-				cout << endl;
 				
 				// Just choose the first transport type for now
 				detectives[i].move(nextStation, transportTypes[0], mrX);
@@ -448,7 +475,7 @@
 
 	// Returns vector of subway stations to be used in DetectiveStrategy
 	// 1, 46, 74, 93, 79, 111, 163, 153, 140, 185, 159, 13, 67, 89
-	vector<Station> getSubwayStations(vector<Station> board){
+	vector<Station> GameManager::getSubwayStations(vector<Station> board){
 		vector<Station> subwayStations;
 		for(int i = 0; i < board.size(); i++){
 			vector<Edge> stationEdges = board[i].getEdges();
