@@ -111,12 +111,14 @@
 		*/
 
 		if(locations[0].getStation() == -1) {//its round 1 or 2, and our tree is "empty" 
-			//move to a spot on the board that is optimal for being able to move 'anywhere' 
+			//if we can reach an underground station in two moves or less, go there
+			//if not, move to a spot on the board that is optimal for being able to move 'anywhere' 
+			
 			//this Station has to be a valid move from where the detective is, so get all valid next stations: 
 			vector<int> adjacents = board[detective.getCurrentStation()-1].getAllAdjacentStations(detectiveLocations, detective.getTaxiTickets(), detective.getBusTickets(), detective.getSubwayTickets());
-			return optimalBlindMove(adjacents, board);
+			return optimalBlindMove(detective, adjacents, board);
 		}
-		else { //carry on normally 
+		else { //we have a tree of possibleMrX locations because mrX has revealed his location at least once 
 			int shortestPathLen = INT_MAX; //current shortest path found
 			int curPathLen;  //current path we're working with 
 			vector<int> curPath;
@@ -327,16 +329,17 @@
 	}
 	
 	//takes a vector of station numbers which are the currently reachable stations of the current detective and 
+	//if an underground station is reachable as a next station, return that station (go there)
+	//if we are at an undergound station, stay there (want to stay here until mrX is revealed), else
 	//returns the station which has the most edges to other stations (has the most access to other stations)
-	int DetectiveStrategy::optimalBlindMove(vector<int> adjacents, vector<Station> board) {
-		//for debugging, delete later: 
-		/*
-		cout << "choosing optimal blind move. adjacent stations: " ;
-		for (int k = 0; k < adjacents.size(); k++){
-			cout << adjacents[k] << " ";
-		}
-		cout << endl;
-		*/
+	int DetectiveStrategy::optimalBlindMove(Player detective, vector<int> adjacents, vector<Station> board) {
+		
+		//are we at an underground station already? stay there/return it: 
+		//vector<board[detective.getCurrentStation()-].getEdges();
+		
+		//is one of our adjacent stations an underground station? is so, return it
+		// ...
+		
 		//start by setting optimal to be the first adjacent station
 		int optimal = adjacents[0];
 		
