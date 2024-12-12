@@ -206,7 +206,7 @@
 				cout << "\nAvailable modes of transportation: ";
 				printAvailalbeTransportTypes(availTransportTypes);
 				
-				cout << "Enter the first transport type (1: Taxi, 2: Bus, 3: Subway, 4: Black Ticket): ";
+				cout << "Enter the first transport type (1: Taxi, 2: Bus, 4: Underground , 8: Black Ticket): ";
 				cin >> firstTransport;
 				
 				//catch invalid input 
@@ -256,7 +256,7 @@
 				cout << "\nAvailable modes of transportation: ";
 				printAvailalbeTransportTypes(secondAvailTransportTypes);
 				
-				cout << "Enter the second transport type (1: Taxi, 2: Bus, 3: Subway, 4: Black Ticket): ";
+				cout << "Enter the second transport type (1: Taxi, 2: Bus, 4: Underground , 8: Black Ticket): ";
 				cin >> doubleTransport;	
 				
 				//catch invalid input 
@@ -304,7 +304,7 @@
 				cout << "\nAvailable modes of transportation: ";
 				printAvailalbeTransportTypes(availTransportTypes);
 				
-				cout << "Enter the desired transport type (1: Taxi, 2: Bus, 3: Subway, 4: Black Ticket): ";
+				cout << "Enter the desired transport type (1: Taxi, 2: Bus, 4: Underground , 8: Black Ticket): ";
 				cin >> chosenTransport;
 				
 				//catch invalid input 
