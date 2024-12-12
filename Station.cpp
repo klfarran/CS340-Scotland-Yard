@@ -76,7 +76,7 @@
 					adjacents.push_back(edges[i].getPointB()); //destination station from our station cur
 			}
 		}
-
+		
 	   return adjacents;
 	}
 
