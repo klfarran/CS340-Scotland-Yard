@@ -22,6 +22,7 @@ class GameManager {
 		TreeNode Build_Tree(int station, vector<Station>& board, Player& mrX, vector<Player> detectives);
 		void AddNextPossibleMrXLocations(TreeNode& possibleMrXLocations, vector<Station>& board, Player& mrX, vector<Player>& detectives);
 		void printAvailalbeTransportTypes(vector<int> availTransportTypes);
+		vector<Station> getSubwayStations(vector<Station> board);
 		
 	
 	private: 

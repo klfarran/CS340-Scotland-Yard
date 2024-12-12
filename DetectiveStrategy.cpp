@@ -70,8 +70,8 @@
 				vector<int> transportTypes = board[currStation].getAllTransportTypesTo(board[adj - 1]);
 				for (int transportType : transportTypes) {
 					bool hasTickets = (transportType == 1 && taxiTix > 0) || 
-									(transportType == 2 && busTix > 0) || 
-									(transportType == 4 && subwayTix > 0);
+									  (transportType == 2 && busTix > 0) || 
+									  (transportType == 4 && subwayTix > 0);
 					if (hasTickets && !visited[adj - 1] && distances[currStation] + 1 < distances[adj - 1]) {
 						distances[adj - 1] = distances[currStation] + 1;
 						predecessors[adj - 1] = currStation;
@@ -96,7 +96,7 @@
 	
 	//Uses shortestPath and loops through mr. x’s potential locations and 
 	//selects the location with the minimal distance for the detective 'detective'
-	int DetectiveStrategy::chooseOptimalDetectiveMove(Player detective, vector<int> detectiveLocations, TreeNode potentialMrXLocations, vector<Station> board) {
+	int DetectiveStrategy::chooseOptimalDetectiveMove(Player detective, vector<int> detectiveLocations, TreeNode potentialMrXLocations, vector<Station> board, vector<int> optimalPath) {
 		//leaves of the tree of potential mrX locations are the current potential mrx locations- get them 
 		vector<TreeNode> locations; 
 		potentialMrXLocations.getLeaves(potentialMrXLocations, locations); //locations is updated by reference to contain the leaves 
@@ -140,8 +140,9 @@
 			for(int i = 0; i < curPath.size(); i++){
 				cout << curPath[i] << " ";
 			}
-			cout << endl;
-*/
+			*/
+			optimalPath = curPath;
+
 			return curPath[1];
 		}
 	}
@@ -153,7 +154,7 @@
 		return Station(0, edges);
 	}
 	
-	//pulls optimal moves an	d uses tie to decide which detective gets ahead.  
+	//pulls optimal moves and uses tie to decide which detective gets ahead.  
 	//this needs the tree node vetor to show the potential X locations. 
 	//the stations that rep the board. 
 	void DetectiveStrategy::detectiveGreedyMove(vector<TreeNode> potentialMrXLocations, vector<Station> board) {
@@ -208,8 +209,6 @@
 	//Returns a vector<int> which is the path (station #s in order) to the nearest subway station that the detective can reach in 'moves' number of moves
 	//'moves' is the number of moves before mr. x shows up
 	//'start' is the current station of the detective 
-	//TO-DO: in GameManager, need to create function getSubwayStations(vector<Station> board) to be able to pass the subway stations to this function 
-	//subway stations: 1, 46, 74, 93, 79, 111, 163, 153, 140, 185, 159, 13, 67, 89
 	vector<int> DetectiveStrategy::pathToClosestSubway(Player detective, int moves, vector<int> subwayStations, vector<Station> board) {
 				
 			int shortestPathLen = INT_MAX;	
