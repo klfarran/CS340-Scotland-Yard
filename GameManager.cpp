@@ -26,14 +26,27 @@
 	}
 	
 	//returns true if the vector 'nums' containsNum the int 'wanted', false otherwise 
-	//small twist- if wants is a or 2 and nums contains a 3, return true (3 means taxi or bus)
-	//if wants is 2 or 4 and nums contains a 6, return true (6 means bus or underground)
-	bool containsNum(vector<int> nums, int wanted) {
+	//small twist	
+	//if wants is a 1, nums must contain either a 1 or a 3 (taxi or taxi | bus)
+	//if wants is a 2, nums must contains either a 2 or 3 or 6
+	//if wants is 3, nums must contain either a 4 or a 6
+	//if wants is a 4, nums must contain an 8
+	bool specialContainsNum(vector<int> nums, int wanted) {
 		for (int i = 0; i < nums.size(); i++) {
-			if(nums[i] == wanted || nums[3] && (wanted == 1 || wanted == 2)|| nums[6] && (wanted == 2 || wanted == 4))
+			if(wanted == 1 && (nums[i] == 1 || nums[i] == 3) || wanted == 2 && (nums[i] == 2 || nums[i] == 3 || nums[i] == 6) || wanted == 3 && (nums[i] == 4 || nums[i] == 6) || wanted == 4 && nums[i] == 8)
 				return true;
+			//if(nums[i] == wanted || nums[3] && (wanted == 1 || wanted == 2)|| nums[6] && (wanted == 2 || wanted == 4))
+				
 		}
 		return false;
+	}
+	
+	//returns true if the vector 'nums' containsNum the int 'wanted', false otherwise 
+	bool containsNum(vector<int> nums, int wanted) {
+		for (int i = 0; i < nums.size(); i++) {
+			if(nums[i] == wanted)
+				return true;
+		}
 	}
 	
 	//function to initialize the game board 
@@ -210,7 +223,7 @@
 				cin >> firstTransport;
 				
 				//catch invalid input 
-				while (cin.fail() || !containsNum(availTransportTypes, firstTransport)) {
+				while (cin.fail() || !specialContainsNum(availTransportTypes, firstTransport)) {
 					cin.clear(); // clear the error flag
 					cin.ignore(numeric_limits<streamsize>::max(), '\n'); // discard trash input (all the way until new line)
 					cout << "\nInvalid input. Please enter a valid transport type." << endl;
@@ -260,7 +273,7 @@
 				cin >> doubleTransport;	
 				
 				//catch invalid input 
-				while (cin.fail() || !containsNum(secondAvailTransportTypes, doubleTransport)) {
+				while (cin.fail() || !specialContainsNum(secondAvailTransportTypes, doubleTransport)) {
 					cin.clear(); // clear the error flag
 					cin.ignore(numeric_limits<streamsize>::max(), '\n'); // discard trash input (all the way until new line)
 					cout << "\nInvalid input. Please enter a valid transport type." << endl;
@@ -308,7 +321,7 @@
 				cin >> chosenTransport;
 				
 				//catch invalid input 
-				while (cin.fail() || !containsNum(availTransportTypes, chosenTransport)) {
+				while (cin.fail() || !specialContainsNum(availTransportTypes, chosenTransport)) {
 					cin.clear(); // clear the error flag
 					cin.ignore(numeric_limits<streamsize>::max(), '\n'); // discard trash input (all the way until new line)
 					cout << "\nInvalid input. Please enter a valid transport type." << endl;
@@ -346,20 +359,26 @@
 
 				// Keep track of next station
 				int nextStation;
-
+				/*
+			cout << "locations on chooseOPtimal: ";
+		for (int z = 0; z < getDetectiveLocations(detectives).size(); z++) {
+			cout << getDetectiveLocations(detectives)[z] << " ";
+		}
+cout << endl;
+*/
 				nextStation = detectiveStrategy.chooseOptimalDetectiveMove(detectives[i], round, getDetectiveLocations(detectives), possibleMrXLocations, subwayStations, board, optimalPath);
 				
 				// If optimalPath requires more moves than moves until Mr X's next appearance,
 				// detective will try to move to a subway station instead
 				if(optimalPath.size() > movesUntilAppearance){
+					cout << "choosing subway path instead" << endl;
 					vector<int> subwayPath = detectiveStrategy.pathToClosestSubway(detectives[i], movesUntilAppearance, subwayStations, board);
 					nextStation = subwayPath[1];
 				}
 
-				detectives[i].setCurrentStation(stationNum);
+				//detectives[i].setCurrentStation(stationNum);
 				
 				vector<int> transportTypes = board[detectives[i].getCurrentStation()-1].getAllTransportTypesTo(board[nextStation-1]);
-				
 				// Just choose the first transport type for now
 				detectives[i].move(nextStation, transportTypes[0], mrX);
 				
@@ -367,8 +386,9 @@
 				cout << "Detective #" << detectiveNum << " moved to station " << detectives[i].getCurrentStation() << " \n" << endl; 
 				
 				if(detectives[i].getCurrentStation() == mrX.getCurrentStation()) {
-					cout << "Detective # " << detectiveNum << "has caught Mr. X!! The detectives win!" << endl;
+					cout << "Detective # " << detectiveNum << " has caught Mr. X!! The detectives win!" << endl;
 					gameOver = true;
+					break; //out of detective for loop 
 				}	
 				
 				detectiveNum++;
@@ -436,19 +456,6 @@
 			 }
 	    }
 		
-	  /*debugging 
-		cout << "curroot: " << possibleMrXLocations.getStation() << endl;
-
-		cout << "printing out leaves: " << endl;
-		for (int i = 0; i < leaves.size(); i++) {
-			cout << "leaf number: " << leaves[i].getStation() << ", children: ";
-				vector<TreeNode> children = leaves[i].getChildren();
-				for (int j = 0; j < children.size(); j++) {
-					cout << children[j].getStation() << " ";
-				}
-		}
-		cout << endl;
-		*/
 		possibleMrXLocations.setChildren(leaves);
 		
 	}
