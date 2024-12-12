@@ -26,9 +26,11 @@
 	}
 	
 	//returns true if the vector 'nums' containsNum the int 'wanted', false otherwise 
+	//small twist- if wants is a or 2 and nums contains a 3, return true (3 means taxi or bus)
+	//if wants is 2 or 4 and nums contains a 6, return true (6 means bus or underground)
 	bool containsNum(vector<int> nums, int wanted) {
 		for (int i = 0; i < nums.size(); i++) {
-			if(nums[i] == wanted)
+			if(nums[i] == wanted || nums[3] && (wanted == 1 || wanted == 2)|| nums[6] && (wanted == 2 || wanted == 4))
 				return true;
 		}
 		return false;
@@ -40,7 +42,7 @@
 		
 	   vector<Station> board; 
 		
-		//READ EACH EDGE DEFINITION FROM AN EXTERNAL FILE 
+		//read each edge definition from an external file 
 		
 		vector<Edge> edges; //vector of all edges, must be read from "edges.txt"
 		
@@ -149,7 +151,7 @@
 			}
 
 			// Display current round
-			cout << "\nRound " << round << " begins!" << endl;
+			cout << "Round " << round << " begins!" << endl;
 
 			// Mr. X's turn
 			cout << "Mr. X's turn!" << endl;
@@ -354,15 +356,21 @@
 					nextStation = subwayPath[1];
 				}
 
-				cout << "destination station: " << nextStation << " " << endl; 
-
 				detectives[i].setCurrentStation(stationNum);
 				
 				vector<int> transportTypes = board[detectives[i].getCurrentStation()-1].getAllTransportTypesTo(board[nextStation-1]);
 				
 				// Just choose the first transport type for now
 				detectives[i].move(nextStation, transportTypes[0], mrX);
-
+				
+				//show where the detective moved (we'd be able to see this on the board)
+				cout << "Detective #" << detectiveNum << " moved to station " << detectives[i].getCurrentStation() << " \n" << endl; 
+				
+				if(detectives[i].getCurrentStation() == mrX.getCurrentStation()) {
+					cout << "Detective # " << detectiveNum << "has caught Mr. X!! The detectives win!" << endl;
+					gameOver = true;
+				}	
+				
 				detectiveNum++;
 			}
 
@@ -456,13 +464,13 @@
 		bool hasBlack = false; 
 		
 		for(int k = 0; k < availTransportTypes.size(); k++) {
-				if(availTransportTypes[k] == 1)
+				if(availTransportTypes[k] == 1 || availTransportTypes[k] == 3)
 					hasTaxi = true;
-				else if(availTransportTypes[k] == 2)
+				if(availTransportTypes[k] == 2 || availTransportTypes[k] == 3 || availTransportTypes[k] == 6)
 					hasBus = true;
-				else if(availTransportTypes[k] == 4)
+				if(availTransportTypes[k] == 4 || availTransportTypes[k] == 6)
 					hasUnd = true; 
-				else if(availTransportTypes[k] == 8)
+				if(availTransportTypes[k] == 8)
 					hasBlack = true;
 			}
 			
@@ -474,11 +482,13 @@
 			answer += "Underground ";
 		if(hasBlack)
 			answer += "Black ";
-		
+
 		//add commas in the answer 
 		for (int k = 0; k < answer.length() -1; k++) { //dont want to replace the last space with a comma 
-			if (answer.at(k) == ' ') 
-				answer.insert(k, ", ");
+			if (answer.at(k) == ' ') {
+				answer.insert(k, ",");
+				k +=2; //have to skip over chars in answer to get to where we should be in the next iteration of the loop because we just added chars to answer
+			}
 		}
 		cout << answer << endl;
 	}
