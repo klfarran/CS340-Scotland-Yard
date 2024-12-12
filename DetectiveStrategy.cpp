@@ -100,15 +100,6 @@
 		//leaves of the tree of potential mrX locations are the current potential mrx locations- get them 
 		vector<TreeNode> locations; 
 		potentialMrXLocations.getLeaves(potentialMrXLocations, locations); //locations is updated by reference to contain the leaves 
-		//debugging:
-		/*
-		cout << "root: " << potentialMrXLocations.getStation() << endl;
-		cout << "printing leaves only: " << potentialMrXLocations.getNumChildren() << endl;
-		for (int i = 0; i < locations.size(); i++){
-		 	cout << locations[i].getStation() << " ";
-		}
-		cout << endl;
-		*/
 
 		if(locations[0].getStation() == -1) {//its round 1 or 2, and our tree is "empty" 
 			//move to a spot on the board that is optimal for being able to move 'anywhere' 
@@ -130,13 +121,6 @@
 					shortestPathLen = curPathLen;
 				}
 			}
-			
-			/*
-			// debugging
-			for(int i = 0; i < curPath.size(); i++){
-				cout << curPath[i] << endl;
-			}
-			*/
 			optimalPath = curPath;
 
 			return curPath[1];
